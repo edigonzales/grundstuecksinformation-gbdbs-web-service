@@ -12,3 +12,6 @@ ACTION="http://schemas.geo.admin.ch/BJ/TGBV/GBDBSSvc/2.1/GetParcelsById"
 URL="http://localhost:8080/ws"
 curl -H "Content-Type: text/xml; charset=utf-8" -H "SOAPAction:$ACTION" -d@request.xml $URL
 ```
+
+## TODO:
+- Fix schemaLocation in `http://localhost:8080/ws/gbdbs.wsdl`
