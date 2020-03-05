@@ -22,7 +22,7 @@ repositories {
 task genJaxb {
     ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
     ext.classesDir = "${buildDir}/classes/jaxb"
-    ext.schema = "src/main/resources/countries.xsd"
+    ext.schema = "src/main/resources/xsd/GBDBS/2.1/gbdbs.wsdl"
 
     outputs.dir classesDir
 
@@ -33,8 +33,9 @@ task genJaxb {
             mkdir(dir: sourcesDir)
             mkdir(dir: classesDir)
 
-            xjc(destdir: sourcesDir, schema: schema) {
+            xjc(destdir: sourcesDir, schema: schema, binding: "src/main/resources/xsd/GBDBS/2.1/binding.xjb") {
                 arg(value: "-wsdl")
+                arg(value: "-extension")
                 produces(dir: sourcesDir, includes: "**/*.java")
             }
 

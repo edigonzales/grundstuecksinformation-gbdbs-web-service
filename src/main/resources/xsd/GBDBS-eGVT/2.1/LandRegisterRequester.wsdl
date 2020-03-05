@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions name="LandRegisterRequesterSvc"
+	targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1"
+	xmlns:tns="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1"
+          xmlns:ver10="http://schemas.terravis.ch/Versioning/1.0"
+          xmlns:ver="http://schemas.terravis.ch/Versioning/1.1"
+          xmlns:usr="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-eGVT/2.1"
+	  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+<!-- version 2.1.4 -->
+    <types>
+    	<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	   <xsd:import namespace="http://schemas.terravis.ch/Versioning/1.0"
+		   schemaLocation="../../Versioning/1.0/Versioning.xsd"/>
+    	<xsd:import namespace="http://schemas.terravis.ch/Versioning/1.1"
+    			schemaLocation="../../Versioning/1.1/Versioning.xsd"/>
+    		<xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-eGVT/2.1"
+		   schemaLocation="../../GBDBS-eGVT/2.1/GBDBS-eGVT.xsd"/>
+    	</xsd:schema>
+    </types>
+	<message name="notifyRegistrationInput">
+		<part name="parameters" element="usr:NotifyRegistration"/>
+	</message>
+	<message name="notifyRegistrationOutput">
+		<part name="parameters" element="usr:NotifyRegistrationResponse"/>
+	</message>
+	<message name="notifyRegistrationFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="notifyRejectionInput">
+		<part name="parameters" element="usr:NotifyRejection"/>
+	</message>
+	<message name="notifyRejectionOutput">
+		<part name="parameters" element="usr:NotifyRejectionResponse"/>
+	</message>
+	<message name="notifyRejectionFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="notifyJournalEntryInput">
+		<part name="parameters" element="usr:NotifyJournalEntry"/>
+	</message>
+	<message name="notifyJournalEntryOutput">
+		<part name="parameters" element="usr:NotifyJournalEntryResponse"/>
+	</message>
+	<message name="notifyJournalEntryFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="notifyJournalEntryRefusalInput">
+		<part name="parameters" element="usr:NotifyJournalEntryRefusal"/>
+	</message>
+	<message name="notifyJournalEntryRefusalOutput">
+		<part name="parameters" element="usr:NotifyJournalEntryRefusalResponse"/>
+	</message>
+	<message name="notifyJournalEntryRefusalFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="requestImprovedDocumentsInput">
+		<part name="parameters" element="usr:RequestImprovedDocuments"/>
+	</message>
+	<message name="requestImprovedDocumentsOutput">
+		<part name="parameters" element="usr:RequestImprovedDocumentsResponse"/>
+	</message>
+	<message name="requestImprovedDocumentsFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+
+	<message name="cancelRequestImprovedDocumentsInput">
+		<part name="parameters" element="usr:CancelRequestImprovedDocuments"/>
+	</message>
+	<message name="cancelRequestImprovedDocumentsOutput">
+		<part name="parameters" element="usr:CancelRequestImprovedDocumentsResponse"/>
+	</message>
+	<message name="cancelRequestImprovedDocumentsFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="changeDeadlineInput">
+		<part name="parameters" element="usr:ChangeDeadline"/>
+	</message>
+	<message name="changeDeadlineOutput">
+		<part name="parameters" element="usr:ChangeDeadlineResponse"/>
+	</message>
+	<message name="changeDeadlineFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+
+	<message name="startBeneficiaryNotificationInput">
+		<part name="parameters" element="usr:StartBeneficiaryNotification"/>
+	</message>
+	<message name="startBeneficiaryNotificationOutput">
+		<part name="parameters" element="usr:StartBeneficiaryNotificationResponse"/>
+	</message>
+	<message name="startBeneficiaryNotificationFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="GetVersions10Input">
+		<part name="parameters" element="ver10:GetVersions"/>
+	</message>
+	<message name="GetVersions10Output">
+		<part name="parameters" element="ver10:GetVersionsResponse"/>
+	</message>
+	
+	<message name="GetVersionsInput">
+		<part name="parameters" element="ver:getVersions"/>
+	</message>
+	<message name="GetVersionsOutput">
+		<part name="parameters" element="ver:getVersionsResponse"/>
+	</message>
+	
+	<portType name="LandRegisterRequesterPortType">
+
+		<operation name="notifyRegistration">
+			<input message="tns:notifyRegistrationInput"/>
+			<output message="tns:notifyRegistrationOutput"/>
+			<fault name="notifyRegistrationFault" message="tns:notifyRegistrationFault"/>
+		</operation>
+
+		<operation name="notifyRejection">
+			<input message="tns:notifyRejectionInput"/>
+			<output message="tns:notifyRejectionOutput"/>
+			<fault name="notifyRejectionFault" message="tns:notifyRejectionFault"/>
+		</operation>
+
+		<operation name="notifyJournalEntry">
+			<input message="tns:notifyJournalEntryInput"/>
+			<output message="tns:notifyJournalEntryOutput"/>
+			<fault name="notifyJournalEntryFault" message="tns:notifyJournalEntryFault"/>
+		</operation>
+		
+		<operation name="notifyJournalEntryRefusal">
+			<input message="tns:notifyJournalEntryRefusalInput"/>
+			<output message="tns:notifyJournalEntryRefusalOutput"/>
+			<fault name="notifyJournalEntryRefusalFault" message="tns:notifyJournalEntryRefusalFault"/>
+		</operation>
+		
+		<operation name="requestImprovedDocuments">
+			<input message="tns:requestImprovedDocumentsInput"/>
+			<output message="tns:requestImprovedDocumentsOutput"/>
+			<fault name="requestImprovedDocumentsFault" message="tns:requestImprovedDocumentsFault"/>
+		</operation>
+		
+		<operation name="cancelRequestImprovedDocuments">
+			<input message="tns:cancelRequestImprovedDocumentsInput"/>
+			<output message="tns:cancelRequestImprovedDocumentsOutput"/>
+			<fault name="cancelRequestImprovedDocumentsFault" message="tns:cancelRequestImprovedDocumentsFault"/>
+		</operation>
+		
+		<operation name="changeDeadline">
+			<input message="tns:changeDeadlineInput"/>
+			<output message="tns:changeDeadlineOutput"/>
+			<fault name="changeDeadlineFault" message="tns:changeDeadlineFault"/>
+		</operation>
+		
+		<operation name="startBeneficiaryNotification">
+			<input message="tns:startBeneficiaryNotificationInput"/>
+			<output message="tns:startBeneficiaryNotificationOutput"/>
+			<fault name="startBeneficiaryNotificationFault" message="tns:startBeneficiaryNotificationFault"/>
+		</operation>
+		
+		<operation name="GetVersions10">
+			<input message="tns:GetVersions10Input"/>
+			<output message="tns:GetVersions10Output"/>
+		</operation>
+		
+		<operation name="GetVersions">
+			<input message="tns:GetVersionsInput"/>
+			<output message="tns:GetVersionsOutput"/>
+		</operation>
+		
+    </portType>
+
+	
+
+    <binding name="LandRegisterRequesterSoapHttpBinding" type="tns:LandRegisterRequesterPortType">
+
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+		<operation name="notifyRegistration">
+			<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/notifyRegistration" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="notifyRegistrationFault">
+				<soap:fault name="notifyRegistrationFault" use="literal" />
+			</fault>
+		</operation>
+
+		<operation name="notifyRejection">
+			<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/notifyRejection" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="notifyRejectionFault">
+				<soap:fault name="notifyRejectionFault" use="literal" />
+			</fault>
+		</operation>
+
+		<operation name="notifyJournalEntry">
+			<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/notifyJournalEntry" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="notifyJournalEntryFault">
+				<soap:fault name="notifyJournalEntryFault" use="literal" />
+			</fault>
+		</operation>
+		
+		<operation name="notifyJournalEntryRefusal">
+			<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/notifyJournalEntryRefusal" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="notifyJournalEntryRefusalFault">
+				<soap:fault name="notifyJournalEntryRefusalFault" use="literal" />
+			</fault>
+		</operation>
+
+    	<operation name="requestImprovedDocuments">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/requestImprovedDocuments" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    		<fault name="requestImprovedDocumentsFault">
+    			<soap:fault name="requestImprovedDocumentsFault" use="literal" />
+    		</fault>
+    	</operation>
+    	
+    	<operation name="cancelRequestImprovedDocuments">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/cancelRequestImprovedDocuments" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    		<fault name="cancelRequestImprovedDocumentsFault">
+    			<soap:fault name="cancelRequestImprovedDocumentsFault" use="literal" />
+    		</fault>
+    	</operation>
+    	
+    	<operation name="changeDeadline">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/changeDeadline" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    		<fault name="changeDeadlineFault">
+    			<soap:fault name="changeDeadlineFault" use="literal" />
+    		</fault>
+    	</operation>
+    	
+    	<operation name="startBeneficiaryNotification">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/startBeneficiaryNotification" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    		<fault name="startBeneficiaryNotificationFault">
+    			<soap:fault name="startBeneficiaryNotificationFault" use="literal" />
+    		</fault>
+    	</operation>
+    	
+		<operation name="GetVersions10">
+			<soap:operation soapAction="http://schemas.terravis.ch/LandRegisterRequesterSvc/1.0/GetVersions" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+
+    	<operation name="GetVersions">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1/GetVersions" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    	</operation>
+    	
+    </binding>
+
+</definitions>

@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:GbId="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1"
+  xmlns:GBBasisTypen="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1"
+  xmlns="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS/2.1" 
+  targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS/2.1" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="2.1.3"
+  >
+  <xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1" schemaLocation="../../GBBasisId/2.1/GBBasisId.xsd"/>
+  <xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1" schemaLocation="../../GBBasisTypen/2.1/GBBasisTypen.xsd"/>
+
+  <xsd:element name="extensions">
+    <xsd:annotation>
+      <xsd:documentation>any vendor specifics</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+<xsd:simpleType name="BezugInhalt">
+  <xsd:restriction base="xsd:normalizedString">
+    <xsd:enumeration value="Index"/>
+    <xsd:enumeration value="IndexMitEigentum"/>
+    <xsd:enumeration value="Oeffentlich"/>
+    <xsd:enumeration value="Vollstaendig"/>
+    <xsd:enumeration value="Datenbezug"/>
+  </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="NameKriterium">
+  <xsd:restriction base="xsd:normalizedString">
+  </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="PersonenArt">
+  <xsd:restriction base="xsd:normalizedString">
+    <xsd:enumeration value="Alle"/>
+    <xsd:enumeration value="NatuerlichePerson"/>
+    <xsd:enumeration value="JuristischePerson"/>
+    <xsd:enumeration value="Gemeinschaft"/>
+  </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="PersonenRolle">
+  <xsd:restriction base="xsd:normalizedString">
+    <xsd:enumeration value="Alle"/>
+    <xsd:enumeration value="Eigentum"/>
+    <xsd:enumeration value="Glaeubiger"/>
+    <xsd:enumeration value="Dienstbarkeit"/>
+    <xsd:enumeration value="Grundlast"/>
+    <xsd:enumeration value="Vormerkung"/>
+    <xsd:enumeration value="Anmerkung"/>
+  </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="Version">
+  <xsd:restriction base="xsd:normalizedString">
+    <xsd:maxLength value="40"/>
+  </xsd:restriction>
+</xsd:simpleType>
+<xsd:element name="Exception" type="ExceptionType"/>
+<xsd:complexType  name="ExceptionType">
+  <xsd:sequence>
+    <xsd:element name="code">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:enumeration value="other"/>
+          <xsd:enumeration value="tooManyResults"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="nativeCode" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="message" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="technicalDetails" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="transactionId" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+  <xsd:attribute name="id" type="xsd:ID"/>
+</xsd:complexType>
+<xsd:element name="AbstractRequest" type="AbstractRequestType"/>
+<xsd:complexType  name="AbstractRequestType">
+  <xsd:sequence>
+    <xsd:element name="version">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="transactionId">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+  </xsd:sequence>
+</xsd:complexType>
+<xsd:element name="Adresse" type="AdresseType"/>
+<xsd:complexType  name="AdresseType">
+  <xsd:sequence>
+    <xsd:element name="BFSNr" type="GBBasisTypen:BFSNr" minOccurs="0"/>
+    <xsd:element name="Strasse" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="60"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Nummer" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="12"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="GWR_EGID" type="GBBasisTypen:GWR_EGID" minOccurs="0"/>
+    <xsd:element name="GWR_EDID" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:integer">
+          <xsd:minInclusive value="0"/>
+          <xsd:maxInclusive value="99"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+  <xsd:attribute name="id" type="xsd:ID"/>
+</xsd:complexType>
+<xsd:element name="GetCapabilitiesResponse" type="GetCapabilitiesResponseType"/>
+<xsd:complexType  name="GetCapabilitiesResponseType">
+  <xsd:sequence>
+    <xsd:element name="supportedVersion" type="Version" maxOccurs="unbounded"/>
+    <xsd:element name="inclEGRID" type="xsd:boolean"/>
+    <xsd:element name="inclUID" type="xsd:boolean"/>
+    <xsd:element name="inclAHVN13" type="xsd:boolean"/>
+    <xsd:element name="inclGebaeudeArt" type="xsd:boolean"/>
+    <xsd:element name="inclGWR_EGID" type="xsd:boolean"/>
+    <xsd:element name="inclGemeinschaftArt" type="xsd:boolean"/>
+    <xsd:element name="inclDokumente" type="xsd:boolean"/>
+    <xsd:element name="historyBackTo" type="GBBasisTypen:Datum" minOccurs="0"/>
+    <xsd:element name="grundbuch" maxOccurs="unbounded">
+      <xsd:complexType>
+        <xsd:sequence>
+          <xsd:element name="SubKreis" type="GbId:SubKreis"/>
+          <xsd:element name="Los" type="GbId:Los" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>fehlt, falls ein SubKreis nicht in einzelne Einheiten unterteilt ist</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="Name" type="xsd:normalizedString">
+            <xsd:annotation>
+              <xsd:documentation>Name/Bezeichnung fuer Kombination SubKreis+Los</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="BFSNr" type="GBBasisTypen:BFSNr"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+</xsd:complexType>
+<xsd:element name="GetParcelIndexResponse" type="GetParcelIndexResponseType"/>
+<xsd:complexType  name="GetParcelIndexResponseType">
+  <xsd:sequence>
+    <xsd:element name="shortIndex" type="GbId:GrundstueckNummer" minOccurs="0" maxOccurs="unbounded"/>
+    <xsd:element name="Index" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element ref="GBBasisTypen:Grundstueck"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+</xsd:complexType>
+<xsd:element name="GetParcelsByIdResponse" type="GetParcelsByIdResponseType"/>
+<xsd:complexType  name="GetParcelsByIdResponseType">
+  <xsd:sequence>
+    <xsd:element name="standDerDaten" type="xsd:date" minOccurs="0"/>
+    <xsd:element name="Grundstueck" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element ref="GBBasisTypen:Grundstueck"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Person" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element ref="GBBasisTypen:PersonGB"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Recht" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element ref="GBBasisTypen:Recht"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+</xsd:complexType>
+<xsd:element name="GetPersonIndexResponse" type="GetPersonIndexResponseType"/>
+<xsd:complexType  name="GetPersonIndexResponseType">
+  <xsd:sequence>
+    <xsd:element name="PersonIndex" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element ref="PersonIndex"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+</xsd:complexType>
+<xsd:element name="Grundstueck" type="GrundstueckType"/>
+<xsd:complexType  name="GrundstueckType">
+  <xsd:sequence>
+    <xsd:element name="Nummer"  minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="BFSNr" type="GBBasisTypen:BFSNr" minOccurs="0"/>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+  <xsd:attribute name="id" type="xsd:ID"/>
+</xsd:complexType>
+<xsd:element name="PersonIndex" type="PersonIndexType"/>
+<xsd:complexType  name="PersonIndexType">
+  <xsd:sequence>
+    <xsd:element name="Name">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Vorname" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Geburtsjahr" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:integer">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Geburtsmonat" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:integer">
+          <xsd:minInclusive value="1"/>
+          <xsd:maxInclusive value="12"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Geburtstag" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:integer">
+          <xsd:minInclusive value="1"/>
+          <xsd:maxInclusive value="31"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="WohnadresseOrt" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="WohnadressePLZ" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="20"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Sitz" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="PersonId" type="GbId:PersonId"/>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+  <xsd:attribute name="id" type="xsd:ID"/>
+</xsd:complexType>
+<xsd:element name="Berechtigte" type="BerechtigteType"/>
+<xsd:complexType  name="BerechtigteType">
+  <xsd:sequence>
+    <xsd:element name="PersonenRolle" type="PersonenRolle"/>
+    <xsd:element name="BFSNr" type="GBBasisTypen:BFSNr" minOccurs="0"/>
+    <xsd:element name="Person" type="GbId:PersonId" maxOccurs="unbounded"/>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+  <xsd:attribute name="id" type="xsd:ID"/>
+</xsd:complexType>
+<xsd:element name="Recht" type="RechtType"/>
+<xsd:complexType  name="RechtType">
+  <xsd:sequence>
+    <xsd:element name="alteNummer" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="20"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="BFSNr" type="GBBasisTypen:BFSNr" minOccurs="0"/>
+    <xsd:element name="EREID" type="GbId:EREID" minOccurs="0"/>
+    <xsd:element ref="extensions" minOccurs="0"/>
+  </xsd:sequence>
+  <xsd:attribute name="id" type="xsd:ID"/>
+</xsd:complexType>
+<xsd:element name="GetCapabilitiesRequest" type="GetCapabilitiesRequestType" substitutionGroup="AbstractRequest"/>
+<xsd:complexType  name="GetCapabilitiesRequestType">
+  <xsd:complexContent>
+    <xsd:extension base="AbstractRequestType">
+      <xsd:sequence>
+        <xsd:element ref="extensions" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="GetParcelIndexRequest" type="GetParcelIndexRequestType" substitutionGroup="AbstractRequest"/>
+<xsd:complexType  name="GetParcelIndexRequestType">
+  <xsd:complexContent>
+    <xsd:extension base="AbstractRequestType">
+      <xsd:sequence>
+        <xsd:element name="shortIndex" type="xsd:boolean"/>
+        <xsd:element name="includeHistory" type="xsd:boolean"/>
+        <xsd:element name="Adresse" minOccurs="0">
+          <xsd:complexType>
+            <xsd:sequence>
+            <xsd:element ref="Adresse"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="Grundstueck" minOccurs="0">
+          <xsd:complexType>
+            <xsd:sequence>
+            <xsd:element ref="Grundstueck"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="Berechtigte" minOccurs="0">
+          <xsd:complexType>
+            <xsd:sequence>
+            <xsd:element ref="Berechtigte"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="Recht" minOccurs="0">
+          <xsd:complexType>
+            <xsd:sequence>
+            <xsd:element ref="Recht"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element ref="extensions" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="GetParcelsByIdRequest" type="GetParcelsByIdRequestType" substitutionGroup="AbstractRequest"/>
+<xsd:complexType  name="GetParcelsByIdRequestType">
+  <xsd:complexContent>
+    <xsd:extension base="AbstractRequestType">
+      <xsd:sequence>
+        <xsd:element name="BezugInhalt" type="BezugInhalt"/>
+        <xsd:element name="includeHistory" type="xsd:boolean" minOccurs="0"/>
+        <xsd:element name="Id" type="GbId:GrundstueckNummer" maxOccurs="unbounded"/>
+        <xsd:element ref="extensions" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="GetPersonIndexRequest" type="GetPersonIndexRequestType" substitutionGroup="AbstractRequest"/>
+<xsd:complexType  name="GetPersonIndexRequestType">
+  <xsd:complexContent>
+    <xsd:extension base="AbstractRequestType">
+      <xsd:sequence>
+        <xsd:element name="includeHistory" type="xsd:boolean"/>
+        <xsd:element name="PersonenRolle" type="PersonenRolle"/>
+        <xsd:element name="BFSNr" type="GBBasisTypen:BFSNr" minOccurs="0"/>
+        <xsd:element name="PersonenArt" type="PersonenArt"/>
+        <xsd:element name="NamePerson" type="NameKriterium"/>
+        <xsd:element name="Vorname" type="NameKriterium" minOccurs="0"/>
+        <xsd:element name="Jahrgang" minOccurs="0">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="Sitz" type="NameKriterium" minOccurs="0"/>
+        <xsd:element name="GemeinschaftArt" type="GBBasisTypen:GemeinschaftArt" minOccurs="0"/>
+        <xsd:element ref="extensions" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+  <xsd:element name="GetDocumentsRequest" type="GetDocumentsRequestType" substitutionGroup="AbstractRequest"/>
+  <xsd:complexType  name="GetDocumentsRequestType">
+    <xsd:complexContent>
+      <xsd:extension base="AbstractRequestType">
+        <xsd:sequence>
+          <xsd:element name="egbtbid" type="GbId:EGBTBID"/>
+          <xsd:element name="responseScope">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:token">
+                <xsd:enumeration value="public"/>
+                <xsd:enumeration value="owner"/>
+                <xsd:enumeration value="notary"/>
+                <xsd:enumeration value="surveyor"/>
+                <xsd:enumeration value="beneficiary"/>
+                <xsd:enumeration value="bank">
+                  <xsd:annotation>
+                    <xsd:documentation>fuer konkretes Hypothekgeschaeft benoetigt</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:enumeration>
+                <xsd:enumeration value="pensionFund">
+                  <xsd:annotation>
+                    <xsd:documentation>anerkannte BVG Einrichtung</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:enumeration>
+                <xsd:enumeration value="federalTaxOffice"/>
+                <xsd:enumeration value="cantonalTaxOffice"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="beneficiaryUid" type="GbId:UID" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>required if responseScope==beneficiary</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element ref="extensions" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="GetDocumentsResponse" type="GetDocumentsResponseType"/>
+  <xsd:complexType  name="GetDocumentsResponseType">
+    <xsd:sequence>
+      <xsd:element name="document" type="GBBasisTypen:DokumentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

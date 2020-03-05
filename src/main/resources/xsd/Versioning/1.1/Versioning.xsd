@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://schemas.terravis.ch/Versioning/1.1" 
+  targetNamespace="http://schemas.terravis.ch/Versioning/1.1" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.1.0"
+  >
+  <xsd:element name="vendorFeature" type="VendorFeatureType"/>
+  <xsd:complexType  name="VendorFeatureType">
+    <xsd:sequence>
+      <xsd:element name="item" type="xsd:anyURI" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>Identification of the item to be versioned</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="itemName" type="xsd:NCName" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>optional local name of the item to be versioned (only used, if the item to be versioned is identified by a QName))</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="version" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>optional full version name, including patch-level, e.g. "2.0.3". In production environments, this is only documentation and should not be interpreted</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="extensions">
+        <xsd:annotation>
+          <xsd:documentation>any vendor specifics</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+ 
+  <xsd:complexType  name="VersionType">
+  <xsd:sequence>
+    <xsd:element name="bindingNamespace" type="xsd:anyURI" minOccurs="1" maxOccurs="1">
+      <xsd:annotation>
+        <xsd:documentation>the wsdl:targetNamespace of the web-service binding definition</xsd:documentation>
+      </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="bindingName" type="xsd:NCName" minOccurs="1" maxOccurs="1">
+      <xsd:annotation>
+        <xsd:documentation>the wsdl:binding-name of the web-service binding definition</xsd:documentation>
+      </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="version" minOccurs="0">
+      <xsd:annotation>
+        <xsd:documentation>optional full version name, including patch-level, e.g. "2.0.3". In production environments, this is only documentation and should not be interpreted</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="serviceEndpoint" type="xsd:anyURI" minOccurs="0">
+      <xsd:annotation>
+        <xsd:documentation>for a web-service that is at a different endpoint</xsd:documentation>
+      </xsd:annotation>
+    </xsd:element>
+    <xsd:element ref="vendorFeature" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="getVersions" type="GetVersionsType"/>
+<xsd:complexType  name="GetVersionsType">
+  <xsd:sequence>
+    <xsd:element name="transactionId">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="getVersionsResponse" type="GetVersionsResponseType"/>
+<xsd:complexType  name="GetVersionsResponseType">
+  <xsd:sequence>
+    <xsd:element name="supportedVersion" type="VersionType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+</xsd:schema>

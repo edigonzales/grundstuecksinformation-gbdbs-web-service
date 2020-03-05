@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions name="LandRegisterSvc"
+	targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1"
+	xmlns:tns="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1"
+          xmlns:ver10="http://schemas.terravis.ch/Versioning/1.0"
+          xmlns:ver="http://schemas.terravis.ch/Versioning/1.1"
+          xmlns:usr="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-eGVT/2.1"
+	  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+<!-- version 2.1.7 -->
+    <types>
+    	<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	   <xsd:import namespace="http://schemas.terravis.ch/Versioning/1.0"
+		   schemaLocation="../../Versioning/1.0/Versioning.xsd"/>
+    	<xsd:import namespace="http://schemas.terravis.ch/Versioning/1.1"
+    			schemaLocation="../../Versioning/1.1/Versioning.xsd"/>
+   		<xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-eGVT/2.1"
+		   schemaLocation="../../GBDBS-eGVT/2.1/GBDBS-eGVT.xsd"/>
+    	</xsd:schema>
+    </types>
+    
+	<message name="requestRegistrationInput">
+		<part name="parameters" element="usr:RequestRegistration"/>
+	</message>
+	<message name="requestRegistrationOutput">
+		<part name="parameters" element="usr:RequestRegistrationResponse"/>
+	</message>
+	<message name="requestRegistrationFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="deliverRegistrationDetailsInput">
+		<part name="parameters" element="usr:DeliverRegistrationDetails"/>
+	</message>
+	<message name="deliverRegistrationDetailsOutput">
+		<part name="parameters" element="usr:DeliverRegistrationDetailsResponse"/>
+	</message>
+	<message name="deliverRegistrationDetailsFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="deliverImprovedDocumentsInput">
+		<part name="parameters" element="usr:DeliverImprovedDocuments"/>
+	</message>
+	<message name="deliverImprovedDocumentsOutput">
+		<part name="parameters" element="usr:DeliverImprovedDocumentsResponse"/>
+	</message>
+	<message name="deliverImprovedDocumentsFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+
+	<message name="rejectImprovedDocumentsInput">
+		<part name="parameters" element="usr:RejectImprovedDocuments"/>
+	</message>
+	<message name="rejectImprovedDocumentsOutput">
+		<part name="parameters" element="usr:RejectImprovedDocumentsResponse"/>
+	</message>
+	<message name="rejectImprovedDocumentsFault">
+		<part name="parameters" element="usr:Exception"/>
+	</message>
+	
+	<message name="GetNewParcelNumberInput">
+		<part name="p1" element="usr:GetNewParcelNumber"/>
+	</message>
+	
+	<message name="GetNewParcelNumberOutput">
+		<part name="p1" element="usr:GetNewParcelNumberResponse"/>
+	</message>
+	
+	<message name="GetNewParcelNumberFault">
+		<part name="p1" element="usr:Exception"/>
+	</message>
+	
+	<message name="GetVersions10Input">
+		<part name="parameters" element="ver10:GetVersions"/>
+	</message>
+	<message name="GetVersions10Output">
+		<part name="parameters" element="ver10:GetVersionsResponse"/>
+	</message>
+
+	<message name="GetVersionsInput">
+		<part name="parameters" element="ver:getVersions"/>
+	</message>
+	<message name="GetVersionsOutput">
+		<part name="parameters" element="ver:getVersionsResponse"/>
+	</message>
+	
+
+	<portType name="LandRegisterPortType">
+
+		<operation name="requestRegistration">
+			<input message="tns:requestRegistrationInput"/>
+			<output message="tns:requestRegistrationOutput"/>
+			<fault name="requestRegistrationFault" message="tns:requestRegistrationFault"/>
+		</operation>
+
+		<operation name="deliverRegistrationDetails">
+			<input message="tns:deliverRegistrationDetailsInput"/>
+			<output message="tns:deliverRegistrationDetailsOutput"/>
+			<fault name="deliverRegistrationDetailsFault" message="tns:deliverRegistrationDetailsFault"/>
+		</operation>
+
+		<operation name="deliverImprovedDocuments">
+			<input message="tns:deliverImprovedDocumentsInput"/>
+			<output message="tns:deliverImprovedDocumentsOutput"/>
+			<fault name="deliverImprovedDocumentsFault" message="tns:deliverImprovedDocumentsFault"/>
+		</operation>
+		
+		<operation name="rejectImprovedDocuments">
+			<input message="tns:rejectImprovedDocumentsInput"/>
+			<output message="tns:rejectImprovedDocumentsOutput"/>
+			<fault name="rejectImprovedDocumentsFault" message="tns:rejectImprovedDocumentsFault"/>
+		</operation>
+		
+		<operation name="GetNewParcelNumber">
+			<input message="tns:GetNewParcelNumberInput"/>
+			<output message="tns:GetNewParcelNumberOutput"/>
+			<fault name="GetNewParcelNumberFault" message="tns:GetNewParcelNumberFault"/>
+		</operation>
+		
+		<operation name="GetVersions10">
+			<input message="tns:GetVersions10Input"/>
+			<output message="tns:GetVersions10Output"/>
+		</operation>
+		
+		<operation name="GetVersions">
+			<input message="tns:GetVersionsInput"/>
+			<output message="tns:GetVersionsOutput"/>
+		</operation>
+		
+	</portType>
+
+	
+
+    <binding name="LandRegisterSoapHttpBinding" type="tns:LandRegisterPortType">
+
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+		<operation name="requestRegistration">
+			<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1/requestRegistration" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="requestRegistrationFault">
+				<soap:fault name="requestRegistrationFault" use="literal" />
+			</fault>
+		</operation>
+
+		<operation name="deliverRegistrationDetails">
+			<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1/deliverRegistrationDetails" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="deliverRegistrationDetailsFault">
+				<soap:fault name="deliverRegistrationDetailsFault" use="literal" />
+			</fault>
+		</operation>
+		
+    	<operation name="deliverImprovedDocuments">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1/deliverImprovedDocuments" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    		<fault name="deliverImprovedDocumentsFault">
+    			<soap:fault name="deliverImprovedDocumentsFault" use="literal" />
+    		</fault>
+    	</operation>
+
+    	<operation name="rejectImprovedDocuments">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1/rejectImprovedDocuments" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    		<fault name="rejectImprovedDocumentsFault">
+    			<soap:fault name="rejectImprovedDocumentsFault" use="literal" />
+    		</fault>
+    	</operation>
+    	
+    	<operation name="GetNewParcelNumber">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1/getNewParcelNumber" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    		<fault name="GetNewParcelNumberFault">
+    			<soap:fault name="GetNewParcelNumberFault" use="literal" />
+    		</fault>
+    	</operation>
+    	
+    	<operation name="GetVersions10">
+			<soap:operation soapAction="http://schemas.terravis.ch/LandRegisterSvc/1.0/GetVersions" style="document"/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+    	
+    	<operation name="GetVersions">
+    		<soap:operation soapAction="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1/GetVersions" style="document"/>
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    	</operation>
+    	
+    </binding>
+
+</definitions>

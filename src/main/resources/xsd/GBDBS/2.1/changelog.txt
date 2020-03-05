@@ -1,0 +1,108 @@
+2.1.3 2015-11-02 ceis
+*********************
+keine Aenderungen
+
+2.1.2 2015-02-06 ceis
+*********************
+neuer Namespace-Stamm http://schemas.geo.admin.ch/BJ/TGBV/
+PersonenRolle/Schuldner geloescht
+PersonIndex/Geburtsjahr ohne Einschraenkung
+GetPersonIndexRequest/Jahrgang ohne Einschraenkung
+
+2.1.1 2014-09-17 ceis
+*********************
+getCapabilities: inclDokumente hinzugefuegt
+extensions bei allen Elementen (die UML-Klassen sind) ergaenzt 
+
+2.1.0 2014-09-03 ceis
+*********************
+Namespace der GBDBS von 2.0 auf 2.1 geaendert
+Neue (aktuelle) Version Versioning verwenden
+neue Funktion getDocuments()
+getParcelIndex: Recht in Berechtigte umbenannt
+getParcelIndex: Berechtigte/RechtArt in PersonenRolle umbenannt
+getParcelIndex: RechtArt in PersonenRolle umbenannt
+getParcelIndex: PersonenRolle/Schuldner ergaenzt
+getParcelIndex: Schuldbrief in Recht umbenannt
+getPersonIndex: RechtArt in PersonenRolle umbenannt
+getPersonIndex: PersonenRolle/Schuldner ergaenzt
+getCapabilities: grundbuch hinzugefuegt
+
+2.0.4 2011-10-11 ceis
+*********************
+- corrected GetPersonIndexFault binding
+
+2.0.3 2011-09-21 ceis
+*********************
+- Namespace GbId eingefuehrt
+
+2.0.2 2011-07-xx ceis
+*********************
+- neu notifyJournalEntryRefusal(); fuer Rueckweisung
+- GBDBS-eGVT:Exception/nativeCode+technicalDetails neu optional
+- GBDBS-eGVT:Exception/messageId umbenannt zu relatedMessageId
+- GBDBS-eGVT:Verwendung von TerravisHeader vereinheitlicht
+- GBBasis:Operation hat neu folgende Werte (INSERT,CANCEL,INSERTCANCEL)
+
+2.0.1 2011-06-20 ceis
+*********************
+- neues Attribut operationOrder um Ordung innerhalb einer Mutation zu definieren
+- TeilMutation neu Mutationsinhalt
+- Grundstueck/alt|neu kann nicht via Anmeldung geaendert werden
+- Dokument/Datei neu base64binary
+- Kontaktdetails ergaenzt
+- RequestRegistrationContainer/signature optional damit Entwicklung vorerst ohne dig Sig
+- neu DeliverRegistrationDetails um Daten passend zu Papieranmeldung ans GB zu senden
+
+2.0.0 2011-03-30 ceis
+*********************
+- 1. Entwurf eGVT
+- Unterteilung in Basis, Auskunft, Datei und eGVT
+
+1.1.3 2011-03-25 ceis
+*********************
+- gbdbs:Grundstueck/Nummer optional, damit Liste der Grundstuecke pro Gemeinde ermittelt werden kann
+
+1.1.2 2011-03-18 ceis
+*********************
+- TeilMutation neu globales Element; damit referenzierbar/wiederverwendbar
+- Aenderungen von 1.0.8 uebernommen
+-   InhaltLiegenschaft/Flaechenmass, InhaltMiteigentumsAnteil/Beschreibung, InhaltGewoehnlichesSDR/Art, InhaltKonzession/Beschreibung neu optional (nur fuer Grundstuecke mit istKopie=true)
+-   neues Element InhaltBergwerk definiert; wegen Symmetrie zu Grundstueck-Vererbungshierarchie
+-   GetVersions() ergaenzt
+-   InhaltGewoehnlichesSDR/Beschreibung ergaenzt; damit man gegenueber der zugrundliegenden Dienstbarkeit eine unterschiedliche Beschreibung des SDR haben kann
+-   InhaltDienstbarkeit/istVerselbstaendigt ergaenzt, damit man erkennt welche Dienstbarkeiten dem SDR zugrundeliegen
+-   JuristischePerson, InhaltJuristischePersonGB: Sitz ist neu optional wegen oeffentlich-rechtlichen Koerperschften bei denen sich der Sitz aus dem Namen ergibt ("Politische Gemeinde Arosa")
+-   InhaltJuristischePersonGB: neue Attribute AuszugOhneSitz, AuszugOhneRechtsform (falls Sitz/Rechtform auch im Namen enthalten ist, kann deren (doppelte) Ausgabe mit den neuen Flags unterdrueckt werden)
+
+1.1.1 2010-09-23 ceis
+*********************
+- Exception ergaenzt
+- Bodenbedeckung/ArtBezeichnung neu TEXT*40 gem AVGBS
+- GestuetzAufGehoertZu und Rangverschiebung attributeGroup begruendetAm ergaenzt
+- GetParcelsByIdResponse/standDerDaten ergaenzt
+- TeilMutation.Notariatsdaten geloescht
+
+1.1.0 2010-06-01 ceis
+*********************
+- Dateibasierter Transfer dokumentiert
+- TeilMutation.Notariatsdaten neu optional; vermeidet leeres Element falls keine solchen Daten vorhanden/transferierbar
+- Recht.Rangverschiebung, Recht.GestuetzAufGehoertZu neu optional; vermeidet leeres Element falls keine solchen Daten vorhanden/transferierbar
+- import von xsd-Dateien in ein xsd:schema Element eingebettet (gem. WS-I Basic Profile 1.0)
+
+1.0.2 2010-05-10 ceis
+*********************
+- Recht.GestuetzAufGehoertZu ergaenzt (weil in eGRISDM vorhanden)
+- attrgrp begruendetAm bei beteiligtenGrundstuecken ergaenzt
+- Idx bei gueltigBis ergaenzt(fuer mehrere Zustaende innerhalb einer Anmeldung)
+- TeilMutation bei Mutationslieferung ergaenzt
+
+1.0.1 2010-04-27 ceis
+*********************
+- GBAmt bei Grundstueck eingefuegt, damit zustaendiges Amt im Auszug ersichtlich ist
+- Recht.alteNummer ergaenzt (weil gem. eGRISDM historisierbar)
+- internes schema in wsdl/types entfernt; mit import innerhalb xs:schema sind importierte typen nur innerhalb des wsdl:types sichtbar
+- GetCapabilitiesResponse.inclKarte entfernt, da diese Bezugsoption nicht mehr vorhanden
+- "Inhalt__" analog uebriger Typhierarchie, zur Vermeidung von MSXML Fehlermeldung "Elemente mit identischen Namen (...), die sich im gleichen Gueltigkeitsbereich befinden, muessen auch vom gleichen Typ sein."
+- neu Recht.Rangverschiebung damit Rangfolge unabhaengig vom uebrigen Inhalt historisierbar
+- schema z.T. geoeffnet, so dass Herstellerspezifische Erweiterungen ohne Typ-Erweiterungen moeglich sind 

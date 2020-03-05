@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<soapenv:Envelope xmlns:ns="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS/2.1" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Header/>
+<soapenv:Body>
+<ns:GetParcelsByIdRequest>
+<ns:version>2.1</ns:version>
+<ns:transactionId>RAUM-14922-1</ns:transactionId>
+<ns:BezugInhalt>IndexMitEigentum</ns:BezugInhalt>
+<ns:includeHistory>true</ns:includeHistory>
+<ns:Id>CH240632707339::::</ns:Id>
+</ns:GetParcelsByIdRequest>
+</soapenv:Body>
+</soapenv:Envelope>

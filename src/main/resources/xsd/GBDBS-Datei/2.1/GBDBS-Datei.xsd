@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:GBBasisTypen="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1"
+  xmlns="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-Datei/2.1" 
+  targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-Datei/2.1" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="2.1.3"
+  >
+  <xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1"  schemaLocation="../../GBBasisTypen/2.1/GBBasisTypen.xsd"/>
+<xsd:element name="GBDBS" type="GBDBSType"/>
+<xsd:complexType name="GBDBSType">
+  <xsd:annotation>
+    <xsd:documentation>root element to implement a file based transfer</xsd:documentation>
+  </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="HEADERSECTION">
+	  <xsd:annotation>
+	    <xsd:documentation>any vendor specifics</xsd:documentation>
+	  </xsd:annotation>
+      	<xsd:complexType>
+	  <xsd:sequence>
+      	    <xsd:any minOccurs="0" maxOccurs="unbounded" processContents ="lax"/>
+	  </xsd:sequence>
+	  <xsd:anyAttribute processContents ="lax"/>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DATASECTION" type="DataSection"/>
+    </xsd:sequence>
+</xsd:complexType>
+  <xsd:complexType name="DataSection">
+      <xsd:choice>
+        <xsd:element name="Vollbestand" type="VollbestandType"/>
+        <xsd:element name="Mutationslieferung" type="MutationslieferungType"/>
+      </xsd:choice>
+  </xsd:complexType>
+  <xsd:complexType name="VollbestandType">
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="GBBasisTypen:Grundstueck"/>
+        <xsd:element ref="GBBasisTypen:PersonGB"/>
+        <xsd:element ref="GBBasisTypen:Recht"/>
+        <xsd:element ref="GBBasisTypen:Anmeldung"/>
+        <xsd:element ref="GBBasisTypen:extensions"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MutationslieferungType">
+    <xsd:sequence>
+      <xsd:element name="Mutation" type="GBBasisTypen:MutationType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

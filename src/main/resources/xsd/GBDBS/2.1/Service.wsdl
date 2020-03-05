@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions name="GBDBSSvcSample"
+
+targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/GBDBSSvcSample/2.1"
+          xmlns:tns="http://schemas.geo.admin.ch/BJ/TGBV/GBDBSSvcSample/2.1"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns:defs="http://schemas.geo.admin.ch/BJ/TGBV/GBDBSSvc/2.1"
+          xmlns:defs2="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1"
+          xmlns:defs3="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+   <import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBDBSSvc/2.1" location="gbdbs.wsdl"/>
+   <import namespace="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterSvc/2.1" location="../../GBDBS-eGVT/2.1/LandRegister.wsdl"/>
+   <import namespace="http://schemas.geo.admin.ch/BJ/TGBV/LandRegisterRequesterSvc/2.1" location="../../GBDBS-eGVT/2.1/LandRegisterRequester.wsdl"/>
+
+
+    <service name="GBDBSServiceInstance">
+       <port name="GBDBSServicePort" binding="defs:ParcelServiceSoapHttpBinding">
+           <soap:address location="http://example.com/GBDBS/2.1"/>
+        </port>
+       <port name="LandRegisterServicePort" binding="defs2:LandRegisterSoapHttpBinding">
+          <soap:address location="http://example.com/LandRegister/2.1"/>
+       </port>
+       <port name="LandRegisterRequesterServicePort" binding="defs3:LandRegisterRequesterSoapHttpBinding">
+          <soap:address location="http://example.com/LandRegisterRequester/2.1"/>
+       </port>
+    </service>
+</definitions>
+

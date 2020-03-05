@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-eGVT/2.1" 
+	xmlns="http://schemas.geo.admin.ch/BJ/TGBV/GBDBS-eGVT/2.1" 
+	xmlns:GbId="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1" 
+	xmlns:GBBasisTypen="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1" 
+        xmlns:header="http://schemas.terravis.ch/TerravisHeader/1.0" 
+        xmlns:eCH-0058="http://www.ech.ch/xmlns/eCH-0058/5" 
+	xmlns:contact="http://schemas.terravis.ch/TerravisContact/1.1" 
+        xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+        elementFormDefault="qualified"   attributeFormDefault="unqualified"
+        version="2.1.7"
+        >
+	<xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1" schemaLocation="../../GBBasisId/2.1/GBBasisId.xsd"/>
+	<xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1" schemaLocation="../../GBBasisTypen/2.1/GBBasisTypen.xsd"/>
+	<xsd:import namespace="http://schemas.terravis.ch/TerravisHeader/1.0"  schemaLocation="../../TerravisHeader/1.0/TerravisHeader.xsd"/>
+	<xsd:import namespace="http://www.ech.ch/xmlns/eCH-0058/5"  schemaLocation="../../eCH-0058/5/eCH-0058-5-0.xsd"/>
+	<xsd:import namespace="http://schemas.terravis.ch/TerravisContact/1.1" schemaLocation="../../TerravisContact/1.1/TerravisContact.xsd"/>
+	<xsd:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../../xmldsig/2000-09/xmldsig-core-schema.xsd"/>
+	<xsd:element name="extensions">
+		<xsd:annotation>
+			<xsd:documentation>any vendor specifics</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Exception" type="Exception"/>
+	<xsd:complexType name="Exception">
+		<xsd:sequence>
+			<xsd:element name="code">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:normalizedString">
+						<xsd:enumeration value="other"/>
+						<xsd:enumeration value="UnknownPartner"/>
+						<xsd:enumeration value="NotAuthorized"/>
+						<xsd:enumeration value="UnknownCaseId"/>
+						<xsd:enumeration value="SignatureError"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="nativeCode" type="xsd:normalizedString" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="message" type="xsd:normalizedString" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="technicalDetails" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="caseId" type="xsd:normalizedString" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="relatedMessageId" type="xsd:normalizedString" minOccurs="1" maxOccurs="1"/>
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+<xsd:element name="AbstractRequest" type="AbstractRequestType"/>
+<xsd:complexType  name="AbstractRequestType">
+  <xsd:sequence>
+    <xsd:element name="version">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="transactionId">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+  </xsd:sequence>
+</xsd:complexType>
+	
+	<xsd:element name="RequestRegistrationContainer" type="RequestRegistrationContainer"/>
+	<xsd:complexType name="RequestRegistrationContainer">
+		<xsd:sequence>
+			<xsd:element name="declaringPerson" type="GbId:PersonId" minOccurs="1" maxOccurs="unbounded"/>
+			<xsd:element name="caseDescriptionKeyword" type="GBBasisTypen:Anmeldung_GeschaeftsfallbeschreibungType" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="caseDescriptionSupplement" type="GBBasisTypen:StichwortZusatz" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="comments" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="paperDocuments" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="change" type="GBBasisTypen:MutationsinhaltType" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="document" type="GBBasisTypen:DokumentType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+                <xsd:attribute name="id" type="xsd:ID"/>
+	</xsd:complexType>
+	
+	<xsd:element name="RequestRegistration" type="RequestRegistration" substitutionGroup="AbstractRequest"/> 
+	<xsd:complexType name="RequestRegistration"> 
+		<xsd:complexContent>
+		<xsd:extension base="AbstractRequestType">
+		<xsd:sequence> 
+			<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="contact" minOccurs="0" maxOccurs="1">
+			  <xsd:complexType>
+			    <xsd:sequence>
+			      <xsd:element ref="contact:TerravisContact" minOccurs="0" maxOccurs="unbounded"/>
+			    </xsd:sequence>
+			  </xsd:complexType>
+			</xsd:element>
+			<xsd:element ref="RequestRegistrationContainer" minOccurs="1" maxOccurs="1"/> 
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+		</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="RequestRegistrationResponse" type="RequestRegistrationResponse"/> 
+	<xsd:complexType name="RequestRegistrationResponse"> 
+	</xsd:complexType>
+	<xsd:element name="DeliverRegistrationDetails" type="DeliverRegistrationDetails" substitutionGroup="AbstractRequest"/> 
+	<xsd:complexType name="DeliverRegistrationDetails"> 
+		<xsd:complexContent>
+		<xsd:extension base="AbstractRequestType">
+		<xsd:sequence> 
+			<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="contact" minOccurs="0" maxOccurs="1">
+			  <xsd:complexType>
+			    <xsd:sequence>
+			      <xsd:element ref="contact:TerravisContact" minOccurs="0" maxOccurs="unbounded"/>
+			    </xsd:sequence>
+			  </xsd:complexType>
+			</xsd:element>
+			<xsd:element ref="RequestRegistrationContainer" minOccurs="1" maxOccurs="1"/> 
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+		</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="DeliverRegistrationDetailsResponse" type="DeliverRegistrationDetailsResponse"/> 
+	<xsd:complexType name="DeliverRegistrationDetailsResponse"> 
+	</xsd:complexType>
+	
+	<xsd:element name="NotifyRegistration" type="NotifyRegistration" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="NotifyRegistration">
+		<xsd:complexContent>
+		<xsd:extension base="AbstractRequestType">
+		<xsd:sequence>
+			<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="change" type="GBBasisTypen:MutationType" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="confirmationDocument" type="GBBasisTypen:DokumentType" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+		</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="NotifyRegistrationResponse" type="NotifyRegistrationResponse"/>
+	<xsd:complexType name="NotifyRegistrationResponse">
+	</xsd:complexType>
+	
+	<xsd:element name="NotifyRejection" type="NotifyRejection" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="NotifyRejection">
+		<xsd:complexContent>
+		<xsd:extension base="AbstractRequestType">
+		<xsd:sequence>
+			<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="EGBTBID" type="GbId:EGBTBID" minOccurs="0"/>
+			<xsd:element name="journalNumber" type="xsd:normalizedString" minOccurs="0"/>
+			<xsd:element name="journalDateTime" type="xsd:dateTime" minOccurs="0"/>
+			<xsd:element name="reasonCode" type="xsd:normalizedString" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="reasonText" type="xsd:normalizedString" minOccurs="1" maxOccurs="1"/>
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+		</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="NotifyRejectionResponse" type="NotifyRejectionResponse"/>
+	<xsd:complexType name="NotifyRejectionResponse">
+	</xsd:complexType>
+	
+	<xsd:element name="NotifyJournalEntry" type="NotifyJournalEntry" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="NotifyJournalEntry">
+		<xsd:complexContent>
+		<xsd:extension base="AbstractRequestType">
+		<xsd:sequence>
+			<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="EGBTBID" type="GbId:EGBTBID"/>
+			<xsd:element name="journalNumber" type="xsd:normalizedString"/>
+			<xsd:element name="journalDateTime" type="xsd:dateTime"/>
+			<xsd:element name="caseDescriptionKeyword" type="GBBasisTypen:Anmeldung_GeschaeftsfallbeschreibungType" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="caseDescriptionSupplement" type="GBBasisTypen:StichwortZusatz" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="declaringPerson" type="GBBasisTypen:PersonGBType" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element name="subjectedParcel" type="GbId:GrundstueckNummer" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+		</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="NotifyJournalEntryResponse" type="NotifyJournalEntryResponse"/>
+	<xsd:complexType name="NotifyJournalEntryResponse">
+	</xsd:complexType>
+	
+	<xsd:element name="NotifyJournalEntryRefusal" type="NotifyJournalEntryRefusal" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="NotifyJournalEntryRefusal">
+		<xsd:complexContent>
+		<xsd:extension base="AbstractRequestType">
+		<xsd:sequence>
+			<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="reasonCode" minOccurs="1" maxOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:normalizedString">
+						<xsd:enumeration value="other"/>
+						<xsd:enumeration value="otherTechnical"/>
+						<xsd:enumeration value="UnknownPartner"/>
+						<xsd:enumeration value="NotAuthorized"/>
+						<xsd:enumeration value="UnknownCaseId"/>
+						<xsd:enumeration value="SignatureError"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="reasonText" type="xsd:normalizedString" minOccurs="1" maxOccurs="1"/>
+			<xsd:element ref="extensions" minOccurs="0"/>
+		</xsd:sequence>
+		</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="NotifyJournalEntryRefusalResponse" type="NotifyJournalEntryRefusalResponse"/>
+	<xsd:complexType name="NotifyJournalEntryRefusalResponse">
+	</xsd:complexType>
+
+	<xsd:element name="RequestImprovedDocuments" type="RequestImprovedDocuments" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="RequestImprovedDocuments">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractRequestType">
+				<xsd:sequence>
+					<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="comments" type="xsd:string"/>
+					<xsd:element name="document" type="GBBasisTypen:DokumentType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>request as PDF</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="deadline" type="xsd:date" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>until when the notary should deliver the improved documents. Deadline must be today or in the future.
+If there is no document delivered until 24:00 of the deadline day, the process is auto-closed.
+If there is no document delivered until the registration or rejection is notified , the process is auto-closed.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="extensions" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="RequestImprovedDocumentsResponse" type="RequestImprovedDocumentsResponse"/>
+	<xsd:complexType name="RequestImprovedDocumentsResponse">
+	</xsd:complexType>
+
+	<xsd:element name="CancelRequestImprovedDocuments" type="CancelRequestImprovedDocuments" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="CancelRequestImprovedDocuments">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractRequestType">
+				<xsd:sequence>
+					<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="comments" type="xsd:string" minOccurs="0"/>
+					<xsd:element ref="extensions" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="CancelRequestImprovedDocumentsResponse" type="CancelRequestImprovedDocumentsResponse"/>
+	<xsd:complexType name="CancelRequestImprovedDocumentsResponse">
+	</xsd:complexType>
+	
+	<xsd:element name="ChangeDeadline" type="ChangeDeadline" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="ChangeDeadline">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractRequestType">
+				<xsd:sequence>
+					<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="comments" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="newDeadline" type="xsd:date">
+						<xsd:annotation>
+							<xsd:documentation>until when the notary should deliver the improved documents. Deadline must be today or in the future.
+								If there is no document delivert until 24:00 of the deadline day, the process is auto-closed.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="extensions" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="ChangeDeadlineResponse" type="ChangeDeadlineResponse"/>
+	<xsd:complexType name="ChangeDeadlineResponse">
+	</xsd:complexType>
+	
+	<xsd:element name="DeliverImprovedDocuments" type="DeliverImprovedDocuments" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="DeliverImprovedDocuments">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractRequestType">
+				<xsd:sequence>
+					<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="contact" minOccurs="0" maxOccurs="1">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element ref="contact:TerravisContact" minOccurs="0" maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="comments" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="documents">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="document" type="GBBasisTypen:DokumentType" minOccurs="0" maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element ref="extensions" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="DeliverImprovedDocumentsResponse" type="DeliverImprovedDocumentsResponse"/>
+	<xsd:complexType name="DeliverImprovedDocumentsResponse">
+	</xsd:complexType>
+
+	<xsd:element name="RejectImprovedDocuments" type="RejectImprovedDocuments" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="RejectImprovedDocuments">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractRequestType">
+				<xsd:sequence>
+					<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="contact" minOccurs="0" maxOccurs="1">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element ref="contact:TerravisContact" minOccurs="0" maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="comments" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="document" type="GBBasisTypen:DokumentType" minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="extensions" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="RejectImprovedDocumentsResponse" type="RejectImprovedDocumentsResponse"/>
+	<xsd:complexType name="RejectImprovedDocumentsResponse">
+	</xsd:complexType>
+	
+
+	<xsd:element name="StartBeneficiaryNotification" type="StartBeneficiaryNotification" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType name="StartBeneficiaryNotification">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractRequestType">
+				<xsd:sequence>
+					<xsd:element ref="eCH-0058:header" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="beneficiaryUid" type="GbId:UID"/>
+					<xsd:element name="rights">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="ereid" type="GbId:EREID" minOccurs="1" maxOccurs="unbounded"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="message" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>notification message</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="document" type="GBBasisTypen:DokumentType">
+						<xsd:annotation>
+							<xsd:documentation>notification as PDF</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="extensions" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element name="StartBeneficiaryNotificationResponse" type="StartBeneficiaryNotificationResponse"/>
+	<xsd:complexType name="StartBeneficiaryNotificationResponse">
+		<xsd:sequence>
+			<xsd:element name="caseId" type="header:CaseId" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>The Case Id of the new process used as a business and technical correlation ID.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:element name="GetNewParcelNumberResponse" type="GetNewParcelNumberResponseType"/>
+	<xsd:complexType  name="GetNewParcelNumberResponseType">
+		<xsd:sequence>
+			<xsd:element name="parcelNumber" type="GbId:GrundstueckNummerDef" minOccurs="1" maxOccurs="1"/>
+			<xsd:element ref="GBBasisTypen:extensions" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	
+	<xsd:element name="GetNewParcelNumber" type="GetNewParcelNumberType" substitutionGroup="AbstractRequest"/>
+	<xsd:complexType  name="GetNewParcelNumberType">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractRequestType">
+				<xsd:sequence>
+					<xsd:element name="SubKreis" type="GbId:SubKreis" minOccurs="1"/>
+					<xsd:element name="Los" type="GbId:Los" minOccurs="0"/>
+					<xsd:element name="BasisGrundstueck" type="GbId:EGRID" minOccurs="0"/>
+					<xsd:element name="GrundstueckArt" minOccurs="1">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:token">
+								<xsd:enumeration value="Liegenschaft"/>
+								<xsd:enumeration value="StockwerksEinheit"/>
+								<xsd:enumeration value="GewoehnlichesMiteigentum"/>
+								<xsd:enumeration value="SDR"/>
+								<xsd:enumeration value="Konzession"/>
+								<xsd:enumeration value="Bergwerk"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element ref="GBBasisTypen:extensions" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+</xsd:schema>

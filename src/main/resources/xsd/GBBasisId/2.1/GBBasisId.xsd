@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1"
+  targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1" elementFormDefault="qualified"
+  attributeFormDefault="unqualified" version="2.1.3">
+
+  <xsd:simpleType name="EGBPID">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="14"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EGBTBID">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="22"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EGRID">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="14"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EREID">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="22"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TagebuchIdx">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="0"/>
+      <xsd:maxInclusive value="2147483647"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TagebuchNummer">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+    <xsd:simpleType name="SubKreis"> 
+      <xsd:restriction base="xsd:normalizedString">
+        <xsd:maxLength value="15"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Los">
+      <xsd:restriction base="xsd:normalizedString">
+        <xsd:maxLength value="15"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  <xsd:simpleType name="UID">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="12"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:simpleType name="BerechtigteId">
+    <xsd:annotation>
+      <xsd:documentation>GrundstueckNummer oder PersonId</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:normalizedString"> 
+      <xsd:pattern value="[^:]*:[^:]*:[^:]*:[^:]*:[^:]*"></xsd:pattern>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:element name="GrundstueckNummerDef" type="GrundstueckNummerDef"/>
+  <xsd:complexType name="GrundstueckNummerDef">
+    <xsd:sequence>
+    <xsd:element name="EGRID" type="EGRID" minOccurs="0"/>
+    <xsd:element name="Nummer">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="12"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="NummerZusatz" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="12"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="SubKreis" type="SubKreis" minOccurs="0"/>
+    <xsd:element name="Los" type="Los" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:simpleType name="GrundstueckNummer">
+    <xsd:annotation>
+      <xsd:documentation>Serialisierte Form der GrundstueckNummer. EGRID:Nummer:NummerZusatz:SubKreis:Los</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:pattern value="[^:]*:[^:]*:[^:]*:[^:]*:[^:]*"></xsd:pattern>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:element name="PersonIdDef" type="PersonIdDef"/>
+  <xsd:complexType name="PersonIdDef">
+    <xsd:sequence>
+    <xsd:element name="EGBPID" type="EGBPID" minOccurs="0"/>
+    <xsd:element name="KantPersNr" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="20"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="UID" type="UID" minOccurs="0">
+    </xsd:element>
+    <xsd:element name="AHVN13" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+          <xsd:maxLength value="13"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="localId" minOccurs="0">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:simpleType name="PersonId">
+    <xsd:annotation>
+      <xsd:documentation>Serialisierte Form der PersonId. EGBPID:KantPersNr:UID:AHVN13:localId</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:pattern value="[^:]*:[^:]*:[^:]*:[^:]*:[^:]*"></xsd:pattern>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:element name="RechtIdDef" type="RechtIdDef"/>
+  <xsd:complexType name="RechtIdDef">
+    <xsd:sequence>
+      <xsd:element name="EREID" type="EREID" minOccurs="0"/>
+      <xsd:element name="alteNummer" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="localId" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="RechtId">
+    <xsd:annotation>
+      <xsd:documentation>Serialisierte Form der RechtId. EREID:alteNummer:localId</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:pattern value="[^:]*:[^:]*:[^:]*"></xsd:pattern>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>

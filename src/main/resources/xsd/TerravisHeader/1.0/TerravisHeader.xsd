@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.terravis.ch/TerravisHeader/1.0"
+	xmlns="http://schemas.terravis.ch/TerravisHeader/1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	version="1.0.3">
+	<xs:element name="TerravisHeader" type="TerravisHeader"/>
+	<xs:complexType name="TerravisHeader">
+		<xs:annotation>
+			<xs:documentation>Eine Meldung enthaelt als fachlichen Inhalt typischerweise alle Informationen, die der Empfaenger (Mensch und Maschine) fuer die Abarbeitung des Prozessschrittes benoetigt. Fuer die Adressierung und Prozesssteuerung werden weitere Informationen benoetigt. Fuer diese wird eine Headerstruktur definiert, die in allen Meldungen vorhanden ist. </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="version" type="xs:normalizedString" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Exakte Versionsangabe der jeweiligen Service-Schnittstelle z.B. "2.0.0"</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="caseId" type="CaseId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identifikation des Terravis-Geschaeftsfalls (GFID). Wird durch Terravis
+						vergeben. Fehlt nur bei den startProzess() Operationen.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="partnerCaseId" type="xs:normalizedString" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identifikation des Geschaeftsfalls aus der Sicht des Teilnehmers. Wird durch
+						Terravis nicht ausgewertet.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="messageId" type="MessageId" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identifikation der Meldung als UUID. Durch den Sender vergeben.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="relatedMessageId" type="MessageId" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identifikation der vorhergehenden asynchronen Meldung. z.B. bei einer NotifyJournalEntry-Meldung die messageId der RequestRegistration-Meldung.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bpId" type="BusinessPartnerId" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identifikation des Teilnehmers. Durch Terravis vergeben.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="userId" type="UserId" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Identifikation des Benutzers. Durch den Teilnehmer vergeben. Fehlt falls der
+						Benutzer beim Empfaenger nicht bekannt (z.B. bei requestRegistration()). </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="UserId" type="UserId"/>
+	<xs:simpleType name="UserId"><xs:annotation><xs:documentation>Terravis Identifikation des Benutzers gem. UsrUpload</xs:documentation></xs:annotation><xs:restriction base="xs:normalizedString"></xs:restriction></xs:simpleType>
+	<xs:element name="BusinessPartnerId" type="BusinessPartnerId"/>
+	<xs:simpleType name="BusinessPartnerId">
+		<xs:annotation>
+			<xs:documentation>Terravis Identifikation des Teilnehmers</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="4"/>
+			<xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="CaseId" type="CaseId"/>
+	<xs:simpleType name="CaseId">
+		<xs:annotation>
+			<xs:documentation>Identifikation des Terravis-Geschaeftsfalls.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:normalizedString">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="MessageId" type="MessageId"/>
+	<xs:simpleType name="MessageId">
+		<xs:annotation>
+			<xs:documentation>Identifikation der Meldung als UUID.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:normalizedString">
+			<xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

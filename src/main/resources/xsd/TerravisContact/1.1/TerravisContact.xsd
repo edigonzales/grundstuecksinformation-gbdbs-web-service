@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.terravis.ch/TerravisContact/1.1"
+	xmlns="http://schemas.terravis.ch/TerravisContact/1.1"
+	xmlns:header="http://schemas.terravis.ch/TerravisHeader/1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.1.0">
+	<xs:import namespace="http://schemas.terravis.ch/TerravisHeader/1.0"
+		schemaLocation="../../TerravisHeader/1.0/TerravisHeader.xsd"/>
+	<xs:element name="TerravisContact" type="TerravisContact"/>
+	<xs:complexType name="TerravisContact">
+		<xs:sequence>
+			<xs:element name="bpId" type="header:BusinessPartnerId" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="userId" type="header:UserId" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="uid" type="xs:normalizedString" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="name" type="xs:normalizedString" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="firstName" type="xs:normalizedString" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="email" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="phone" type="xs:normalizedString" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="orgUnit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>as defined in UsrUpload</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:normalizedString">
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

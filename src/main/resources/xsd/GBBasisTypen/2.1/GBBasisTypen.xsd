@@ -1,0 +1,1961 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1"
+  xmlns:GbId="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1"
+  xmlns:eCH-0007="http://www.ech.ch/xmlns/eCH-0007/6"
+  xmlns:eCH-0010="http://www.ech.ch/xmlns/eCH-0010/6"
+  xmlns:eCH-0011="http://www.ech.ch/xmlns/eCH-0011/8"
+  xmlns:eCH-0098="http://www.ech.ch/xmlns/eCH-0098/3"
+  targetNamespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1" elementFormDefault="qualified"
+  attributeFormDefault="unqualified" version="2.1.6">
+  <xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1"
+    schemaLocation="../../GBBasisId/2.1/GBBasisId.xsd"/>
+  <xsd:import namespace="http://www.ech.ch/xmlns/eCH-0007/6"
+    schemaLocation="../../eCH-0007/6/eCH-0007-6-0.xsd"/>
+  <xsd:import namespace="http://www.ech.ch/xmlns/eCH-0010/6"
+    schemaLocation="../../eCH-0010/6/eCH-0010-6-0.xsd"/>
+  <xsd:import namespace="http://www.ech.ch/xmlns/eCH-0011/8"
+    schemaLocation="../../eCH-0011/8/eCH-0011-8-0.xsd"/>
+  <xsd:import namespace="http://www.ech.ch/xmlns/eCH-0098/3"
+    schemaLocation="../../eCH-0098/3/eCH-0098-3-0.xsd"/>
+
+  <xsd:element name="extensions">
+    <xsd:annotation>
+      <xsd:documentation>any vendor specifics</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+      </xsd:sequence>
+      <!-- xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="TaggedValue"/>
+        <xsd:element ref="ComplexTaggedValue"/>
+      </xsd:choice -->
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="Operation">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="INSERT"/>
+      <xsd:enumeration value="CANCEL"/>
+      <xsd:enumeration value="INSERTCANCEL">
+        <xsd:annotation>
+          <xsd:documentation>nur bei kaskadierenden Mutationen (fuer das Einfuegen von Zustaenden die in der selben Mutation wieder geloescht werden)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:attributeGroup name="OperationAttrs">
+    <xsd:attribute name="operation" type="Operation"/>
+    <xsd:attribute name="operationOrder" type="xsd:positiveInteger"/>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="gueltigBis">
+    <xsd:attribute name="bisEGBTBID" type="GbId:EGBTBID"/>
+    <xsd:attribute name="bisTagebuchNummer" type="GbId:TagebuchNummer"/>
+    <xsd:attribute name="bisTagebuchDatumZeit" type="DatumInklZeit"/>
+    <xsd:attribute name="bisIdx" type="xsd:positiveInteger">
+      <xsd:annotation>
+        <xsd:documentation>state index inside one journal entry, defined only if an xml-instance includes history</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="gueltigVon">
+    <xsd:attribute name="vonEGBTBID" type="GbId:EGBTBID"/>
+    <xsd:attribute name="vonTagebuchNummer" type="GbId:TagebuchNummer"/>
+    <xsd:attribute name="vonTagebuchDatumZeit" type="DatumInklZeit"/>
+    <xsd:attribute name="vonIdx" type="xsd:positiveInteger"/>
+  </xsd:attributeGroup>
+
+  <xsd:complexType name="BerechtigteRefBegruendet">
+    <xsd:sequence>
+      <xsd:element name="ref" type="GbId:BerechtigteId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:complexType name="GrundstueckRefBegruendet">
+    <xsd:sequence>
+      <xsd:element name="ref" type="GbId:GrundstueckNummer"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:complexType name="PersonRefBegruendet">
+    <xsd:sequence>
+      <xsd:element name="ref" type="GbId:PersonId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:complexType name="RechtRefBegruendet">
+    <xsd:sequence>
+      <xsd:element name="ref" type="GbId:RechtId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="Begruendung" type="BelegReferenzType"/>
+  <xsd:element name="Zusatzbeleg" type="BelegReferenzType"/>
+  <xsd:element name="BelegReferenz" type="BelegReferenzType"/>
+  <xsd:complexType name="BelegReferenzType">
+    <xsd:sequence>
+      <xsd:element name="EGBTBID" type="GbId:EGBTBID" minOccurs="0"/>
+      <xsd:element name="TagebuchNummer" type="GbId:TagebuchNummer" minOccurs="1"/>
+      <xsd:element name="TagebuchDatumZeit" type="DatumInklZeit" minOccurs="1"/>
+      <xsd:element name="Idx" type="GbId:TagebuchIdx" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+
+  <xsd:simpleType name="BBArt">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="Gebaeude"/>
+      <xsd:enumeration value="befestigt.Strasse_Weg"/>
+      <xsd:enumeration value="befestigt.Trottoir"/>
+      <xsd:enumeration value="befestigt.Verkehrsinsel"/>
+      <xsd:enumeration value="befestigt.Bahn"/>
+      <xsd:enumeration value="befestigt.Flugplatz"/>
+      <xsd:enumeration value="befestigt.Wasserbecken"/>
+      <xsd:enumeration value="befestigt.uebrige_befestigte"/>
+      <xsd:enumeration value="humusiert.Acker_Wiese_Weide"/>
+      <xsd:enumeration value="humusiert.Intensivkultur.Reben"/>
+      <xsd:enumeration value="humusiert.Intensivkultur.uebrige_Intensivkultur"/>
+      <xsd:enumeration value="humusiert.Gartenanlage"/>
+      <xsd:enumeration value="humusiert.Hoch_Flachmoor"/>
+      <xsd:enumeration value="humusiert.uebrige_humusierte"/>
+      <xsd:enumeration value="Gewaesser.stehendes"/>
+      <xsd:enumeration value="Gewaesser.fliessendes"/>
+      <xsd:enumeration value="Gewaesser.Schilfguertel"/>
+      <xsd:enumeration value="bestockt.geschlossener_Wald"/>
+      <xsd:enumeration value="bestockt.Wytweide.Wytweide_dicht"/>
+      <xsd:enumeration value="bestockt.Wytweide.Wytweide_offen"/>
+      <xsd:enumeration value="bestockt.uebrige_bestockte"/>
+      <xsd:enumeration value="vegetationslos.Fels"/>
+      <xsd:enumeration value="vegetationslos.Gletscher_Firn"/>
+      <xsd:enumeration value="vegetationslos.Geroell_Sand"/>
+      <xsd:enumeration value="vegetationslos.Abbau_Deponie"/>
+      <xsd:enumeration value="vegetationslos.uebrige_vegetationslose"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="BFSNr">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="1"/>
+      <xsd:maxInclusive value="9999"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Datum">
+    <xsd:restriction base="xsd:date"> </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DatumInklZeit">
+    <xsd:restriction base="xsd:dateTime"> </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DauerndesRechtArt">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="Baurecht"/>
+      <xsd:enumeration value="Quellenrecht"/>
+      <xsd:enumeration value="Konzession"/>
+      <xsd:enumeration value="weitere"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DokumentArt">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="Karte"/>
+      <xsd:enumeration value="AndereArt"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="GemeinschaftArt">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="EinfacheGesellschaft"/>
+      <xsd:enumeration value="Guetergemeinschaft"/>
+      <xsd:enumeration value="Erbengemeinschaft"/>
+      <xsd:enumeration value="Gemeinderschaft"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Geschaeftstyp">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="Normal"/>
+      <xsd:enumeration value="Berichtigung"/>
+      <xsd:enumeration value="Ersterfassung"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="GrundpfandrechtArt">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="NamenSchuldbrief"/>
+      <xsd:enumeration value="InhaberSchuldbrief"/>
+      <xsd:enumeration value="NamenGuelt"/>
+      <xsd:enumeration value="InhaberGuelt"/>
+      <xsd:enumeration value="KapitalGrundpfandverschreibung"/>
+      <xsd:enumeration value="MaximalGrundpfandverschreibung"/>
+      <xsd:enumeration value="Altrechtlich"/>
+      <xsd:enumeration value="vorbehaltenerVorgang"/>
+      <xsd:enumeration value="leerePfandstelle"/>
+      <xsd:enumeration value="GrundpfandverschreibungAlsInhaberobligation"/>
+      <xsd:enumeration value="RegisterPfand"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="GWR_EGID">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="1"/>
+      <xsd:maxInclusive value="999999999"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NachrueckungsRechtArt">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="schiebend"/>
+      <xsd:enumeration value="springend"/>
+      <xsd:enumeration value="inDenNebenrang"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NameOrt">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="60"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NamePerson">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="250"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NBIdentAV">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:maxLength value="12"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ObjektIdentifikator">
+    <xsd:restriction base="xsd:token"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Stichwort">
+    <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StichwortZusatz">
+    <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="TaggedValue" type="TaggedValueType"/>
+  <xsd:complexType name="TaggedValueType">
+    <xsd:sequence>
+      <xsd:element name="asText" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="tag">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:anyURI">
+            <xsd:maxLength value="1023"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="value">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string"> </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="ComplexTaggedValue" type="ComplexTaggedValueType"/>
+  <xsd:complexType name="ComplexTaggedValueType">
+    <xsd:sequence>
+        <xsd:element name="asText" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="tag">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:anyURI">
+            <xsd:maxLength value="1023"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:any processContents="skip"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Uebersetzung" type="UebersetzungType"/>
+  <xsd:complexType name="UebersetzungType">
+    <xsd:sequence>
+      <xsd:element name="Sprache">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="de"/>
+            <xsd:enumeration value="fr"/>
+            <xsd:enumeration value="it"/>
+            <xsd:enumeration value="rm"/>
+            <xsd:enumeration value="en"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Begriff">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="255"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:simpleType name="WertCHF">
+    <xsd:restriction base="xsd:decimal">
+      <xsd:minInclusive value="0.00"/>
+      <xsd:maxInclusive value="1000000000000.00"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="Anmeldung_Geschaeftsfallbeschreibung"
+    type="Anmeldung_GeschaeftsfallbeschreibungType"/>
+  <xsd:complexType name="Anmeldung_GeschaeftsfallbeschreibungType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Anmerkung_Art" type="Anmerkung_ArtType"/>
+  <xsd:complexType name="Anmerkung_ArtType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="AuslaendischeRechtsform_Rechtsform"
+    type="AuslaendischeRechtsform_RechtsformType"/>
+  <xsd:complexType name="AuslaendischeRechtsform_RechtsformType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Bergwerk_KantonaleUnterart" type="Bergwerk_KantonaleUnterartType"/>
+  <xsd:complexType name="Bergwerk_KantonaleUnterartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Dienstbarkeit_Art" type="Dienstbarkeit_ArtType"/>
+  <xsd:complexType name="Dienstbarkeit_ArtType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Dokument" type="DokumentType"/>
+  <xsd:complexType name="DokumentType">
+    <xsd:sequence>
+      <xsd:element name="Art" type="DokumentArt"/>
+      <xsd:element name="Nummer" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Dateiname" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="50"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Datei" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Datei eingebettet falls Transprot via SOAP; als ref+attachment falls Transport via SEDEX</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:base64Binary">
+              <xsd:attribute name="ref" type="xsd:anyURI" use="optional"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="VerweisWebDokument" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:anyURI">
+            <xsd:maxLength value="1023"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Erwerbsgrund_Erwerbsart" type="Erwerbsgrund_ErwerbsartType"/>
+  <xsd:complexType name="Erwerbsgrund_ErwerbsartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Gebaeude_Gebaeudeart" type="Gebaeude_GebaeudeartType"/>
+  <xsd:complexType name="Gebaeude_GebaeudeartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Geschaeftsstand_Zustand" type="Geschaeftsstand_ZustandType"/>
+  <xsd:complexType name="Geschaeftsstand_ZustandType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="GewoehnlichesMiteigentum_KantonaleUnterart"
+    type="GewoehnlichesMiteigentum_KantonaleUnterartType"/>
+  <xsd:complexType name="GewoehnlichesMiteigentum_KantonaleUnterartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="GewoehnlichesSDR_KantonaleUnterart"
+    type="GewoehnlichesSDR_KantonaleUnterartType"/>
+  <xsd:complexType name="GewoehnlichesSDR_KantonaleUnterartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Grundlast_Art" type="Grundlast_ArtType"/>
+  <xsd:complexType name="Grundlast_ArtType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Grundpfandrecht_altRechtlichKantonaleArt"
+    type="Grundpfandrecht_altRechtlichKantonaleArtType"/>
+  <xsd:complexType name="Grundpfandrecht_altRechtlichKantonaleArtType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="JuristischePersonGB_Rechtsform" type="JuristischePersonGB_RechtsformType"/>
+  <xsd:complexType name="JuristischePersonGB_RechtsformType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Konzession_KantonaleUnterart" type="Konzession_KantonaleUnterartType"/>
+  <xsd:complexType name="Konzession_KantonaleUnterartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Liegenschaft_KantonaleUnterart" type="Liegenschaft_KantonaleUnterartType"/>
+  <xsd:complexType name="Liegenschaft_KantonaleUnterartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="MutationsNummer" type="MutationsNummerType"/>
+  <xsd:complexType name="MutationsNummerType">
+    <xsd:sequence>
+      <xsd:element name="Nummer">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="12"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="AmtlVermKreis" type="NBIdentAV"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="StockwerksEinheit_KantonaleUnterart"
+    type="StockwerksEinheit_KantonaleUnterartType"/>
+  <xsd:complexType name="StockwerksEinheit_KantonaleUnterartType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Vormerkung_Art" type="Vormerkung_ArtType"/>
+  <xsd:complexType name="Vormerkung_ArtType">
+    <xsd:sequence>
+      <xsd:element name="Stichwort" type="Stichwort"/>
+      <xsd:element name="uuid" type="ObjektIdentifikator"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:simpleType name="FlaecheMitNachkomma">
+    <xsd:restriction base="xsd:decimal">
+      <xsd:minInclusive value="0.0"/>
+      <xsd:maxInclusive value="1000000000.0"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="Adresse" type="AdresseType"/>
+  <xsd:complexType name="AdresseType">
+    <xsd:sequence>
+      <xsd:element name="ZusatzinformationEmpfaenger" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="120"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Strasse" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="60"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Hausnummer" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="GebaeudeBezeichnung" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="60"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PostDienstleistung" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="30"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="BenanntesGebiet" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PLZ" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="25"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Ort" type="NameOrt" minOccurs="0"/>
+      <xsd:element name="Land" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="60"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="GWR_EGID" type="GWR_EGID" minOccurs="0"/>
+      <xsd:element name="GWR_EDID" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="99"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Rolle">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="Rechtsdomizil"/>
+            <xsd:enumeration value="Zustelladresse"/>
+            <xsd:enumeration value="Weitere"/>
+            <xsd:enumeration value="Verwalter"/>
+            <xsd:enumeration value="Wohnadresse"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="RolleWeitereBeschreibung" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="PersonStamm" type="PersonStammType"/>
+  <xsd:complexType name="PersonStammType">
+    <xsd:sequence>
+      <xsd:element name="Name">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="Adresse" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="JuristischePerson" type="JuristischePersonType" substitutionGroup="PersonStamm"/>
+  <xsd:complexType name="JuristischePersonType">
+    <xsd:complexContent>
+      <xsd:extension base="PersonStammType">
+        <xsd:sequence>
+          <xsd:element name="Sitz" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="100"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="NameUebersetzung" type="UebersetzungType" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="detail" type="eCH-0098:organisationType" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="NatuerlichePerson" type="NatuerlichePersonType" substitutionGroup="PersonStamm"/>
+  <xsd:complexType name="NatuerlichePersonType">
+    <xsd:complexContent>
+      <xsd:extension base="PersonStammType">
+        <xsd:sequence>
+          <xsd:element name="Vornamen">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Geburtsjahr" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Geburtsmonat" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1"/>
+                <xsd:maxInclusive value="12"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Geburtstag" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1"/>
+                <xsd:maxInclusive value="31"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Zivilstand" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>Bedeutung der einzelnen Werte gem. eCH-0011. Falls der vorhandene Wert nicht abgebildet werden kann, fehlt das XML Element</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:enumeration value="ledig"/>
+                <xsd:enumeration value="verheiratet"/>
+                <xsd:enumeration value="verwitwet"/>
+                <xsd:enumeration value="geschieden"/>
+                <xsd:enumeration value="unverheiratet"/>
+                <xsd:enumeration value="inEingetragenerPartnerschaft"/>
+                <xsd:enumeration value="aufgeloestePartnerschaft"/>
+                <xsd:enumeration value="unbekannt"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="LedigerName" type="NamePerson" minOccurs="0"/>
+          <xsd:element name="Rufname" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="250"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Buergerort" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="NameDerEltern" type="NamePerson" minOccurs="0"/>
+          <xsd:element name="Geschlecht" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:enumeration value="weiblich"/>
+                <xsd:enumeration value="maennlich"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="EPID" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="detail" type="eCH-0011:personType" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AuslaendischeRechtsform" type="AuslaendischeRechtsformType"
+    substitutionGroup="JuristischePerson"/>
+  <xsd:complexType name="AuslaendischeRechtsformType">
+    <xsd:complexContent>
+      <xsd:extension base="JuristischePersonType">
+        <xsd:sequence>
+          <xsd:element name="RechtsformStichwort" type="AuslaendischeRechtsform_RechtsformType" minOccurs="0"/>
+          <xsd:element name="RechtsformZusatz" type="StichwortZusatz" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="OeffentlicheKoerperschaft" type="OeffentlicheKoerperschaftType"
+    substitutionGroup="JuristischePerson"/>
+  <xsd:complexType name="OeffentlicheKoerperschaftType">
+    <xsd:complexContent>
+      <xsd:extension base="JuristischePersonType">
+        <xsd:sequence> </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SchweizerischeJuristischePerson" type="SchweizerischeJuristischePersonType"
+    substitutionGroup="JuristischePerson"/>
+  <xsd:complexType name="SchweizerischeJuristischePersonType">
+    <xsd:complexContent>
+      <xsd:extension base="JuristischePersonType">
+        <xsd:sequence>
+          <xsd:element name="Gesellschaftsform" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:enumeration value="Aktiengesellschaft"/>
+                <xsd:enumeration value="Kommanditaktiengesellschaft"/>
+                <xsd:enumeration value="GmbH"/>
+                <xsd:enumeration value="Genossenschaft"/>
+                <xsd:enumeration value="Verein"/>
+                <xsd:enumeration value="Stiftung"/>
+                <xsd:enumeration value="weitere"/>
+                <xsd:enumeration value="KollektiveGesellschaft"/>
+                <xsd:enumeration value="KommanditGesellschaft"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="UID" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Abschnitt" type="AbschnittType"/>
+  <xsd:complexType name="AbschnittType">
+    <xsd:sequence>
+      <xsd:element name="Flaechenmass" type="FlaecheMitNachkomma"/>
+      <xsd:element name="Datum" type="Datum"/>
+      <xsd:element name="TagebuchNummer" type="GbId:TagebuchNummer" minOccurs="0"/>
+      <xsd:element name="von" type="GbId:GrundstueckNummer"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="AVBemerkung" type="AVBemerkungType"/>
+  <xsd:complexType name="AVBemerkungType">
+    <xsd:sequence>
+      <xsd:element name="Art">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="StreitigeGrenze"/>
+            <xsd:enumeration value="Lagefixpunkt"/>
+            <xsd:enumeration value="Naturdenkmal"/>
+            <xsd:enumeration value="eingedoltesGewaesser"/>
+            <xsd:enumeration value="andere"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="AndereArt" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Bemerkung" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="200"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Berechtigte" type="BerechtigteType"/>
+  <xsd:complexType name="BerechtigteType">
+    <xsd:sequence>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="Bodenbedeckung" type="BodenbedeckungType"/>
+  <xsd:complexType name="BodenbedeckungType">
+    <xsd:sequence>
+      <xsd:element name="Art" type="BBArt" minOccurs="0"/>
+      <xsd:element name="Flaechenmass" type="FlaecheMitNachkomma" minOccurs="0"/>
+      <xsd:element name="ArtBezeichnung" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="80"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="mitgliedSpezifischerErwerbsgrund" type="GbId:PersonId">
+    <xsd:annotation>
+      <xsd:documentation>Extension beim Erwerbsgrund fuer Capitastra.
+        Erwerbsgruende eines EigentumsAnteils, die diesen Bezug nicht aufweisen, gelten fuer die ganze Gemeinschaft.
+        Erwerbsgruende die diesen Bezug aufweisen, gelten nur fuer dies Person. (Das funktioniert so fachlich nur richtig, weil Capi pro Erscheinen auf dem Auszug eine PersonGB Instanz hat. Sonst braeuchte man den ganzen Pfad der Gemeinschaften)       
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Erwerbsgrund" type="ErwerbsgrundType"/>
+  <xsd:complexType name="ErwerbsgrundType">
+    <xsd:sequence>
+      <xsd:element name="ErwerbsartStichwort" type="Erwerbsgrund_ErwerbsartType" minOccurs="0"/>
+      <xsd:element name="ErwerbsartZusatz" type="StichwortZusatz" minOccurs="0"/>
+      <xsd:element name="Datum" type="Datum"/>
+      <xsd:element name="TagebuchNummer" type="GbId:TagebuchNummer" minOccurs="0"/>
+      <xsd:element name="EGBTBID" type="GbId:EGBTBID" minOccurs="0"/>
+      <xsd:element name="Idx" type="xsd:positiveInteger" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="Flurname" type="FlurnameType"/>
+  <xsd:complexType name="FlurnameType">
+    <xsd:sequence>
+      <xsd:element name="Name">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="GBAmt" type="GBAmtType"/>
+  <xsd:complexType name="GBAmtType">
+    <xsd:sequence>
+      <xsd:element name="Name">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="GBPlan" type="GBPlanType"/>
+  <xsd:complexType name="GBPlanType">
+    <xsd:sequence>
+      <xsd:element name="Nummer">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="12"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="NBIdent" type="NBIdentAV" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Gebaeude" type="GebaeudeType"/>
+  <xsd:complexType name="GebaeudeType">
+    <xsd:sequence>
+      <xsd:element name="GWR_EGID" type="GWR_EGID" minOccurs="0"/>
+      <xsd:element name="istProjektiert" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="istUnterirdisch" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="Nummer" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="GebaeudeartStichwort" type="Gebaeude_GebaeudeartType" minOccurs="0"/>
+      <xsd:element name="GebaeudeartZusatz" type="StichwortZusatz" minOccurs="0"/>
+      <xsd:element name="GebaeudeartCode" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="4"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Flaechenmass" type="FlaecheMitNachkomma" minOccurs="0"/>
+      <xsd:element name="FlaechenmassAnteil" type="FlaecheMitNachkomma" minOccurs="0"/>
+      <xsd:element ref="GebaeudeeingangAdresse" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="GebaeudeeingangAdresse" type="GebaeudeeingangAdresseType"/>
+  <xsd:complexType name="GebaeudeeingangAdresseType">
+    <xsd:sequence>
+      <xsd:element name="Strasse" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="60"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Hausnummer" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="12"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="GebaeudeBezeichnung" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PLZ" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="1000"/>
+            <xsd:maxInclusive value="9999"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PlzZusatzziffern" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="99"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Ortschaft" type="NameOrt" minOccurs="0"/>
+      <xsd:element name="GWR_EGID" type="GWR_EGID" minOccurs="0"/>
+      <xsd:element name="GWR_EDID" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="99"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Gemeinde" type="eCH-0007:swissMunicipalityType">
+    <xsd:annotation>
+      <xsd:documentation>municipalityId ist obligatorisch</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Glaeubiger" type="GlaeubigerType"/>
+  <xsd:complexType name="GlaeubigerType">
+    <xsd:sequence>
+      <xsd:element name="Rolle" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="Grundpfand"/>
+            <xsd:enumeration value="Faustpfand"/>
+            <xsd:enumeration value="Nutzniesser"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Person" type="GbId:PersonId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="HaengigesGeschaeft" type="HaengigesGeschaeftType"/>
+  <xsd:complexType name="HaengigesGeschaeftType">
+    <xsd:sequence>
+      <xsd:element name="EGBTBID" minOccurs="0" type="GbId:EGBTBID"/>
+      <xsd:element name="TagebuchNummer" minOccurs="0" type="GbId:TagebuchNummer"/>
+      <xsd:element name="TagebuchDatumZeit" type="DatumInklZeit" minOccurs="0"/>
+      <xsd:element name="GeschaeftsfallbeschreibungStichwort" type="Stichwort" minOccurs="0"/>
+      <xsd:element name="GeschaeftsfallbeschreibungZusatz" type="StichwortZusatz" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="LastRechtAnmerkung" type="LastRechtAnmerkungType"/>
+  <xsd:complexType name="LastRechtAnmerkungType">
+    <xsd:sequence>
+      <xsd:element name="Berechtigte" type="BerechtigteRefBegruendet" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xsd:element name="belastetesGrundstueck" type="GrundstueckRefBegruendet"
+        maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="LastRechtDienstbarkeit" type="LastRechtDienstbarkeitType"/>
+  <xsd:complexType name="LastRechtDienstbarkeitType">
+    <xsd:sequence>
+      <xsd:element name="Berechtigte" type="BerechtigteRefBegruendet" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="belastetesGrundstueck" type="GrundstueckRefBegruendet"
+        maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="LastRechtGrundlast" type="LastRechtGrundlastType"/>
+  <xsd:complexType name="LastRechtGrundlastType">
+    <xsd:sequence>
+      <xsd:element name="Berechtigte" type="BerechtigteRefBegruendet" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="belastetesGrundstueck" type="GrundstueckRefBegruendet"
+        maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="LastRechtVormerkung" type="LastRechtVormerkungType"/>
+  <xsd:complexType name="LastRechtVormerkungType">
+    <xsd:sequence>
+      <xsd:element name="Berechtigte" type="BerechtigteRefBegruendet" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xsd:element name="belastetesGrundstueck" type="GrundstueckRefBegruendet"
+        maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="RangNachfolge" type="RangNachfolgeType"/>
+  <xsd:complexType name="RangNachfolgeType">
+    <xsd:annotation>
+      <xsd:documentation>Das Element zeigt auf das Recht (beteiligtesGrundstueck), das in Rangnachfolge ist. Das Element wird eingebettet bei dem Recht, das im Vorrang zu einem anderen Recht steht.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Vorrang" type="GbId:GrundstueckNummer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>das beteiligte Grundstueck zu dem Recht wo dieses RangNachfolge Element eingebettet ist</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <!-- die folgenden beiden Elemente stellen zusammen den Verweis auf das beteiligteGrundstueck dar -->
+      <xsd:element name="Grundstueck" type="GbId:GrundstueckNummer"/>
+      <xsd:element name="RechtId" type="GbId:RechtId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="Vorrang" type="VorrangType"/>
+  <xsd:complexType name="VorrangType">
+    <xsd:annotation>
+      <xsd:documentation>Das Element zeigt auf das Recht (beteiligtesGrundstueck), das im Vorrang ist. Das Element wird eingebettet bei dem Recht, das in Rangnachfolge zu einem anderen Recht steht</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="RangNachfolge" type="GbId:GrundstueckNummer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>das beteiligte Grundstueck zu dem Recht wo dieses Vorrang Element eingebettet ist</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <!-- die folgenden beiden Elemente stellen zusammen den Verweis auf das beteiligteGrundstueck dar -->
+      <xsd:element name="Grundstueck" type="GbId:GrundstueckNummer"/>
+      <xsd:element name="RechtId" type="GbId:RechtId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="GestuetzAuf" type="GestuetzAufType"/>
+  <xsd:complexType name="GestuetzAufType">
+    <xsd:sequence>
+      <xsd:element name="Grundstueck" type="GbId:GrundstueckNummer"/>
+      <xsd:element name="RechtId" type="GbId:RechtId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="GehoertZu" type="GehoertZuType"/>
+  <xsd:complexType name="GehoertZuType">
+    <xsd:sequence>
+      <xsd:element name="Grundstueck" type="GbId:GrundstueckNummer"/>
+      <xsd:element name="RechtId" type="GbId:RechtId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:element name="InhaltRecht" type="InhaltRechtType"/>
+  <xsd:complexType name="InhaltRechtType">
+    <xsd:sequence>
+      <xsd:element name="alteNummer" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="istKopie" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="Bemerkungen" type="xsd:string" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="Recht" type="RechtType"/>
+  <xsd:complexType name="RechtType">
+    <xsd:sequence>
+      <xsd:element ref="InhaltRecht" maxOccurs="unbounded"/>
+      <xsd:element name="Rangverschiebung" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="RangNachfolge" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="Vorrang" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attributeGroup ref="gueltigBis"/>
+          <xsd:attributeGroup ref="gueltigVon"/>
+          <xsd:attributeGroup ref="OperationAttrs"/>
+          <xsd:anyAttribute processContents="lax"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GestuetzAufGehoertZu" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="GestuetzAuf" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="GehoertZu" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attributeGroup ref="gueltigBis"/>
+          <xsd:attributeGroup ref="gueltigVon"/>
+          <xsd:attributeGroup ref="OperationAttrs"/>
+          <xsd:anyAttribute processContents="lax"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Fortsetzung" type="RechtRefBegruendet" minOccurs="0"/>
+      <xsd:element name="Nummer" type="GbId:RechtId"/>
+      <xsd:element name="Ursprung" type="RechtRefBegruendet" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="Schuldner" type="SchuldnerType"/>
+  <xsd:complexType name="SchuldnerType">
+    <xsd:sequence>
+      <xsd:element name="Rolle" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="Solidar"/>
+            <xsd:enumeration value="Einfach"/>
+            <xsd:enumeration value="Dritt"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Person" type="GbId:PersonId"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="InhaltVerpfaendetesGrundstueckGrundpfandrecht"
+    type="InhaltVerpfaendetesGrundstueckGrundpfandrechtType"/>
+  <xsd:complexType name="InhaltVerpfaendetesGrundstueckGrundpfandrechtType">
+    <xsd:sequence>
+      <xsd:element name="Teilpfandsumme" type="WertCHF" minOccurs="0"/>
+      <xsd:element name="Pfandstelle" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Nachrueckungsrecht" type="NachrueckungsRechtArt" minOccurs="0"/>
+      <xsd:element name="Bemerkung" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string"> </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="VerpfaendetesGrundstueckGrundpfandrecht"
+    type="VerpfaendetesGrundstueckGrundpfandrechtType"/>
+  <xsd:complexType name="VerpfaendetesGrundstueckGrundpfandrechtType">
+    <xsd:sequence>
+      <xsd:element ref="InhaltVerpfaendetesGrundstueckGrundpfandrecht" maxOccurs="unbounded"/>
+      <xsd:element name="VerpfaendetesGrundstueck" type="GbId:GrundstueckNummer"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="InhaltAnmerkung" type="InhaltAnmerkungType" substitutionGroup="InhaltRecht"/>
+  <xsd:complexType name="InhaltAnmerkungType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltRechtType">
+        <xsd:sequence>
+          <xsd:element name="ArtStichwort" type="Anmerkung_ArtType" minOccurs="0"/>
+          <xsd:element name="ArtZusatz" type="StichwortZusatz" minOccurs="0"/>
+          <xsd:element name="Ablaufdatum" type="Datum" minOccurs="0"/>
+          <xsd:element name="Wert" type="WertCHF" minOccurs="0"/>
+          <xsd:element name="istOeffentlich" type="xsd:boolean" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>true falls es eine oeffentliche Anmerkung ist</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Anmerkung" type="AnmerkungType" substitutionGroup="Recht"/>
+  <xsd:complexType name="AnmerkungType">
+    <xsd:complexContent>
+      <xsd:extension base="RechtType">
+        <xsd:sequence>
+          <xsd:element name="beteiligtesGrundstueck" type="GrundstueckRefBegruendet" minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xsd:element ref="LastRechtAnmerkung" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltDienstbarkeit" type="InhaltDienstbarkeitType"
+    substitutionGroup="InhaltRecht"/>
+  <xsd:complexType name="InhaltDienstbarkeitType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltRechtType">
+        <xsd:sequence>
+          <xsd:element name="ArtStichwort" type="Dienstbarkeit_ArtType" minOccurs="0"/>
+          <xsd:element name="ArtZusatz" type="StichwortZusatz" minOccurs="0"/>
+          <xsd:element name="Ablaufdatum" type="Datum" minOccurs="0"/>
+          <xsd:element ref="Gebaeude" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="mitNebenleistungspflicht" type="xsd:boolean" minOccurs="0"/>
+          <xsd:element name="istVerselbstaendigt" type="xsd:boolean" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Dienstbarkeit" type="DienstbarkeitType" substitutionGroup="Recht"/>
+  <xsd:complexType name="DienstbarkeitType">
+    <xsd:complexContent>
+      <xsd:extension base="RechtType">
+        <xsd:sequence>
+          <xsd:element name="beteiligtesGrundstueck" type="GrundstueckRefBegruendet" minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xsd:element ref="LastRechtDienstbarkeit" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltEigentumAnteil" type="InhaltEigentumAnteilType"
+    substitutionGroup="InhaltRecht"/>
+  <xsd:complexType name="InhaltEigentumAnteilType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltRechtType">
+        <xsd:sequence>
+          <xsd:element name="AnteilZaehler" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1"/>
+                <xsd:maxInclusive value="1000000000"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="AnteilNenner" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1"/>
+                <xsd:maxInclusive value="1000000000"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="SubjektivDinglich" type="xsd:boolean"/>
+          <xsd:element name="Eigentumsform">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:enumeration value="AlleinEigentum"/>
+                <xsd:enumeration value="MitEigentum"/>
+                <xsd:enumeration value="GesamtEigentum"/>
+                <xsd:enumeration value="Herrenlos"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="AnteilInProsa" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="300"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="EigentumAnteil" type="EigentumAnteilType" substitutionGroup="Recht"/>
+  <xsd:complexType name="EigentumAnteilType">
+    <xsd:complexContent>
+      <xsd:extension base="RechtType">
+        <xsd:sequence>
+          <xsd:element name="Berechtigte" type="GbId:BerechtigteId" minOccurs="0"/>
+          <xsd:element name="belastetesGrundstueck" type="GbId:GrundstueckNummer"/>
+          <xsd:element ref="Erwerbsgrund" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltGrundlast" type="InhaltGrundlastType" substitutionGroup="InhaltRecht"/>
+  <xsd:complexType name="InhaltGrundlastType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltRechtType">
+        <xsd:sequence>
+          <xsd:element name="ArtStichwort" type="Grundlast_ArtType" minOccurs="0"/>
+          <xsd:element name="ArtZusatz" type="StichwortZusatz" minOccurs="0"/>
+          <xsd:element name="Gesamtwert" type="WertCHF" minOccurs="0"/>
+          <xsd:element name="Ablaufdatum" type="Datum" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Grundlast" type="GrundlastType" substitutionGroup="Recht"/>
+  <xsd:complexType name="GrundlastType">
+    <xsd:complexContent>
+      <xsd:extension base="RechtType">
+        <xsd:sequence>
+          <xsd:element name="beteiligtesGrundstueck" type="GrundstueckRefBegruendet" minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xsd:element ref="LastRechtGrundlast" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltGrundpfandrecht" type="InhaltGrundpfandrechtType"
+    substitutionGroup="InhaltRecht"/>
+  <xsd:complexType name="InhaltGrundpfandrechtType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltRechtType">
+        <xsd:sequence>
+          <xsd:element name="Art" type="GrundpfandrechtArt"/>
+          <xsd:element name="Pfandsumme" type="WertCHF"/>
+          <xsd:element name="maxZinsfuss" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:decimal">
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="altRechtlichKantonaleArtStichwort" type="Grundpfandrecht_altRechtlichKantonaleArtType" minOccurs="0"/>
+          <xsd:element name="altRechtlichKantonaleArtZusatz" type="StichwortZusatz" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Grundpfandrecht" type="GrundpfandrechtType" substitutionGroup="Recht"/>
+  <xsd:complexType name="GrundpfandrechtType">
+    <xsd:complexContent>
+      <xsd:extension base="RechtType">
+        <xsd:sequence>
+          <xsd:element ref="Glaeubiger" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="Schuldner" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="VerpfaendetesGrundstueckGrundpfandrecht" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="GrundstueckWert" type="GrundstueckWertType"/>
+  <xsd:complexType name="GrundstueckWertType">
+    <xsd:sequence>
+      <xsd:element name="Wert" type="xsd:decimal"/> 
+      <xsd:element name="NameWert" type="xsd:normalizedString">
+        <xsd:annotation>
+          <xsd:documentation>Bezeichnung des Wertes</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element> 
+      <xsd:element name="TypWert" type="xsd:NCName">
+        <xsd:annotation>
+          <xsd:documentation>maschinenlesbarer Code für die Art des Wertes</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element> 
+      <xsd:element name="Datum" type="xsd:date" minOccurs="0"/> 
+      <xsd:element name="NameDatum" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="InhaltGrundstueck" type="InhaltGrundstueckType"/>
+  <xsd:complexType name="InhaltGrundstueckType">
+    <xsd:sequence>
+      <xsd:element name="Fuehrungsart" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="eidgenoessisch"/>
+            <xsd:enumeration value="kantonal"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="Grundstueck" type="GrundstueckType" substitutionGroup="Berechtigte"/>
+  <xsd:complexType name="GrundstueckType">
+    <xsd:complexContent>
+      <xsd:extension base="BerechtigteType">
+        <xsd:sequence>
+          <xsd:element name="Nummer" type="GbId:GrundstueckNummer"/>
+          <xsd:element name="istKopie" type="xsd:boolean"/>
+          <xsd:element ref="InhaltGrundstueck" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="Flurname" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="GBPlan" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="Gemeinde"/>
+          <xsd:element name="alt" type="GrundstueckRefBegruendet" minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xsd:element name="neu" type="GrundstueckRefBegruendet" minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xsd:element ref="AVBemerkung" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="GrundstueckWert" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="GBAmt" minOccurs="0"/>
+          <xsd:element ref="Gebaeude" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="HaengigesGeschaeft" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="Grundbuchname" minOccurs="0" type="xsd:normalizedString"/>
+          <xsd:element ref="extensions" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltPersonGB" type="InhaltPersonGBType"/>
+  <xsd:complexType name="InhaltPersonGBType">
+    <xsd:sequence>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attributeGroup ref="gueltigBis"/>
+    <xsd:attributeGroup ref="gueltigVon"/>
+    <xsd:attributeGroup ref="OperationAttrs"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="PersonGB" type="PersonGBType" substitutionGroup="Berechtigte"/>
+  <xsd:complexType name="PersonGBType">
+    <xsd:complexContent>
+      <xsd:extension base="BerechtigteType">
+        <xsd:sequence>
+          <xsd:element name="Nummer" type="GbId:PersonId"/>
+          <xsd:element ref="InhaltPersonGB" maxOccurs="unbounded"/>
+          <xsd:element ref="PersonStamm" minOccurs="0"/>
+          <xsd:element ref="extensions" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltVormerkung" type="InhaltVormerkungType" substitutionGroup="InhaltRecht"/>
+  <xsd:complexType name="InhaltVormerkungType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltRechtType">
+        <xsd:sequence>
+          <xsd:element name="ArtStichwort" type="Vormerkung_ArtType" minOccurs="0"/>
+          <xsd:element name="ArtZusatz" type="StichwortZusatz" minOccurs="0"/>
+          <xsd:element name="Ablaufdatum" type="Datum" minOccurs="0"/>
+          <xsd:element name="Preis" type="WertCHF" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Vormerkung" type="VormerkungType" substitutionGroup="Recht"/>
+  <xsd:complexType name="VormerkungType">
+    <xsd:complexContent>
+      <xsd:extension base="RechtType">
+        <xsd:sequence>
+          <xsd:element name="beteiligtesGrundstueck" type="GrundstueckRefBegruendet" minOccurs="0"
+            maxOccurs="unbounded"/>
+          <xsd:element ref="LastRechtVormerkung" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltBergwerk" type="InhaltBergwerkType" substitutionGroup="InhaltGrundstueck"/>
+  <xsd:complexType name="InhaltBergwerkType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltGrundstueckType">
+        <xsd:sequence>
+          <xsd:element name="Flaechenmass" type="FlaecheMitNachkomma" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Bergwerk" type="BergwerkType" substitutionGroup="Grundstueck"/>
+  <xsd:complexType name="BergwerkType">
+    <xsd:complexContent>
+      <xsd:extension base="GrundstueckType">
+        <xsd:sequence>
+          <xsd:element name="KantonaleUnterartStichwort" type="Bergwerk_KantonaleUnterartType" minOccurs="0"/>
+          <xsd:element name="KantonaleUnterartZusatz" type="StichwortZusatz" minOccurs="0"/>
+          <xsd:element name="letzteVollzogeneMutation" type="MutationsNummerType" minOccurs="0"/>
+          <xsd:element name="liegt_auf" type="GbId:GrundstueckNummer" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltGemeinschaft" type="InhaltGemeinschaftType"
+    substitutionGroup="InhaltPersonGB"/>
+  <xsd:complexType name="InhaltGemeinschaftType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltPersonGBType">
+        <xsd:sequence>
+          <xsd:element name="Art" type="GemeinschaftArt" minOccurs="0"/>
+          <xsd:element name="Name" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Gemeinschaft" type="GemeinschaftType" substitutionGroup="PersonGB"/>
+  <xsd:complexType name="GemeinschaftType">
+    <xsd:complexContent>
+      <xsd:extension base="PersonGBType">
+        <xsd:sequence>
+          <xsd:element name="Mitglieder" type="PersonRefBegruendet" minOccurs="0"
+            maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltJuristischePersonGB" type="InhaltJuristischePersonGBType"
+    substitutionGroup="InhaltPersonGB"/>
+  <xsd:complexType name="InhaltJuristischePersonGBType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltPersonGBType">
+        <xsd:sequence>
+          <xsd:element name="Name_Firma">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Sitz" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="100"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="AuszugOhneSitz" type="xsd:boolean" minOccurs="0"/>
+          <xsd:element name="RechtsformStichwort" type="JuristischePersonGB_RechtsformType" minOccurs="0"/>
+          <xsd:element name="RechtsformZusatz" type="StichwortZusatz" minOccurs="0"/>
+          <xsd:element name="AuszugOhneRechtsform" type="xsd:boolean" minOccurs="0"/>
+          <xsd:element name="Firmennummer" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="20"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="UID" type="GbId:UID" minOccurs="0">
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="JuristischePersonGB" type="JuristischePersonGBType"
+    substitutionGroup="PersonGB"/>
+  <xsd:complexType name="JuristischePersonGBType">
+    <xsd:complexContent>
+      <xsd:extension base="PersonGBType">
+        <xsd:sequence> 
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltLiegenschaft" type="InhaltLiegenschaftType"
+    substitutionGroup="InhaltGrundstueck"/>
+  <xsd:complexType name="InhaltLiegenschaftType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltGrundstueckType">
+        <xsd:sequence>
+          <xsd:element name="Flaechenmass" type="FlaecheMitNachkomma" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Liegenschaft" type="LiegenschaftType" substitutionGroup="Grundstueck"/>
+  <xsd:complexType name="LiegenschaftType">
+    <xsd:complexContent>
+      <xsd:extension base="GrundstueckType">
+        <xsd:sequence>
+          <xsd:element name="KantonaleUnterartStichwort" type="Liegenschaft_KantonaleUnterartType" minOccurs="0"/>
+          <xsd:element name="KantonaleUnterartZusatz" type="StichwortZusatz" minOccurs="0"/>
+          <xsd:element ref="Bodenbedeckung" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="Zugang" type="AbschnittType" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="letzteVollzogeneMutation" type="MutationsNummerType" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltMiteigentumsAnteil" type="InhaltMiteigentumsAnteilType"
+    substitutionGroup="InhaltGrundstueck"/>
+  <xsd:complexType name="InhaltMiteigentumsAnteilType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltGrundstueckType">
+        <xsd:sequence> </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="MiteigentumsAnteil" type="MiteigentumsAnteilType"
+    substitutionGroup="Grundstueck"/>
+  <xsd:complexType name="MiteigentumsAnteilType">
+    <xsd:complexContent>
+      <xsd:extension base="GrundstueckType">
+        <xsd:sequence> </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltNatuerlichePersonGB" type="InhaltNatuerlichePersonGBType"
+    substitutionGroup="InhaltPersonGB"/>
+  <xsd:complexType name="InhaltNatuerlichePersonGBType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltPersonGBType">
+        <xsd:sequence>
+          <xsd:element name="Name">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Vornamen">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Geburtsjahr" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Geburtsmonat" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1"/>
+                <xsd:maxInclusive value="12"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Geburtstag" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:integer">
+                <xsd:minInclusive value="1"/>
+                <xsd:maxInclusive value="31"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Geschlecht" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:enumeration value="weiblich"/>
+                <xsd:enumeration value="maennlich"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Heimatort" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>fuer Schweizer</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="100"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Staatsangehoerigkeit" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>fuer Auslaender</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:normalizedString">
+                <xsd:maxLength value="100"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="NatuerlichePersonGB" type="NatuerlichePersonGBType"
+    substitutionGroup="PersonGB"/>
+  <xsd:complexType name="NatuerlichePersonGBType">
+    <xsd:complexContent>
+      <xsd:extension base="PersonGBType">
+        <xsd:sequence> 
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltSelbstaendigesDauerndesRecht"
+    type="InhaltSelbstaendigesDauerndesRechtType" substitutionGroup="InhaltGrundstueck"/>
+  <xsd:complexType name="InhaltSelbstaendigesDauerndesRechtType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltGrundstueckType">
+        <xsd:sequence>
+          <xsd:element name="Flaechenmass" type="FlaecheMitNachkomma" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SelbstaendigesDauerndesRecht" type="SelbstaendigesDauerndesRechtType"
+    substitutionGroup="Grundstueck"/>
+  <xsd:complexType name="SelbstaendigesDauerndesRechtType">
+    <xsd:complexContent>
+      <xsd:extension base="GrundstueckType">
+        <xsd:sequence>
+          <xsd:element name="letzteVollzogeneMutation" type="MutationsNummerType" minOccurs="0"/>
+          <xsd:element name="liegt_auf" type="GbId:GrundstueckNummer" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltGewoehnlichesMiteigentum" type="InhaltGewoehnlichesMiteigentumType"
+    substitutionGroup="InhaltMiteigentumsAnteil"/>
+  <xsd:complexType name="InhaltGewoehnlichesMiteigentumType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltMiteigentumsAnteilType">
+        <xsd:sequence>
+          <xsd:element name="Beschreibung" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="GewoehnlichesMiteigentum" type="GewoehnlichesMiteigentumType"
+    substitutionGroup="MiteigentumsAnteil"/>
+  <xsd:complexType name="GewoehnlichesMiteigentumType">
+    <xsd:complexContent>
+      <xsd:extension base="MiteigentumsAnteilType">
+        <xsd:sequence>
+          <xsd:element name="KantonaleUnterartStichwort" type="GewoehnlichesMiteigentum_KantonaleUnterartType" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltGewoehnlichesSDR" type="InhaltGewoehnlichesSDRType"
+    substitutionGroup="InhaltSelbstaendigesDauerndesRecht"/>
+  <xsd:complexType name="InhaltGewoehnlichesSDRType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltSelbstaendigesDauerndesRechtType">
+        <xsd:sequence>
+          <xsd:element name="Art" type="DauerndesRechtArt" minOccurs="0"/>
+          <xsd:element name="Beschreibung" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="GewoehnlichesSDR" type="GewoehnlichesSDRType"
+    substitutionGroup="SelbstaendigesDauerndesRecht"/>
+  <xsd:complexType name="GewoehnlichesSDRType">
+    <xsd:complexContent>
+      <xsd:extension base="SelbstaendigesDauerndesRechtType">
+        <xsd:sequence>
+          <xsd:element name="KantonaleUnterartStichwort" type="GewoehnlichesSDR_KantonaleUnterartType" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltKonzession" type="InhaltKonzessionType"
+    substitutionGroup="InhaltSelbstaendigesDauerndesRecht"/>
+  <xsd:complexType name="InhaltKonzessionType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltSelbstaendigesDauerndesRechtType">
+        <xsd:sequence>
+          <xsd:element name="Beschreibung" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Ablaufdatum" type="Datum" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Konzession" type="KonzessionType"
+    substitutionGroup="SelbstaendigesDauerndesRecht"/>
+  <xsd:complexType name="KonzessionType">
+    <xsd:complexContent>
+      <xsd:extension base="SelbstaendigesDauerndesRechtType">
+        <xsd:sequence>
+          <xsd:element name="KantonaleUnterartStichwort" type="Konzession_KantonaleUnterartType" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InhaltStockwerksEinheit" type="InhaltStockwerksEinheitType"
+    substitutionGroup="InhaltMiteigentumsAnteil"/>
+  <xsd:complexType name="InhaltStockwerksEinheitType">
+    <xsd:complexContent>
+      <xsd:extension base="InhaltMiteigentumsAnteilType">
+        <xsd:sequence>
+          <xsd:element name="Beschreibung" minOccurs="0">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string"> </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="GWR_EGID" type="GWR_EGID" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="StockwerksEinheit" type="StockwerksEinheitType"
+    substitutionGroup="MiteigentumsAnteil"/>
+  <xsd:complexType name="StockwerksEinheitType">
+    <xsd:complexContent>
+      <xsd:extension base="MiteigentumsAnteilType">
+        <xsd:sequence>
+          <xsd:element name="KantonaleUnterartStichwort" type="StockwerksEinheit_KantonaleUnterartType" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Anmeldung" type="AnmeldungType"/>
+  <xsd:complexType name="AnmeldungType">
+    <xsd:sequence>
+      <xsd:element name="EGBTBID" type="GbId:EGBTBID"/>
+      <xsd:element name="TagebuchNummer" type="GbId:TagebuchNummer" minOccurs="0"/>
+      <xsd:element name="TagebuchDatumZeit" type="DatumInklZeit"/>
+      <xsd:element name="GeschaeftsfallbeschreibungStichwort" type="Anmeldung_GeschaeftsfallbeschreibungType" minOccurs="0"/>
+      <xsd:element name="GeschaeftsfallbeschreibungZusatz" type="StichwortZusatz" minOccurs="0"/>
+      <xsd:element name="Bemerkungen" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string"> </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="DossierNummer" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Geschaeftstyp" type="Geschaeftstyp"/>
+      <xsd:element ref="MutationsNummer" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="betroffenesGrundstueck" type="GbId:GrundstueckNummer" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xsd:element name="anmeldendePerson" type="GbId:PersonId" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="gescanntesDokument" type="DokumentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element ref="Geschaeftsstand" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:anyAttribute processContents="lax"/>
+  </xsd:complexType>
+  <xsd:element name="Geschaeftsstand" type="GeschaeftsstandType"/>
+  <xsd:complexType name="GeschaeftsstandType">
+    <xsd:sequence>
+      <xsd:element name="ZustandStichwort" type="Geschaeftsstand_ZustandType" minOccurs="0"/>
+      <xsd:element name="ZustandZusatz" type="StichwortZusatz" minOccurs="0"/>
+      <xsd:element name="ArtDerErledigung">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="Eingetragen"/>
+            <xsd:enumeration value="Rueckzug"/>
+            <xsd:enumeration value="Abweisung"/>
+            <xsd:enumeration value="Ungueltig"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Datum" type="Datum"/>
+      <xsd:element name="AnfechtungsDatum" type="Datum" minOccurs="0"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="MutationType">
+    <xsd:sequence>
+      <xsd:element ref="Anmeldung"/>
+      <xsd:element ref="Mutationsinhalt" minOccurs="0" maxOccurs="1"/>
+      <xsd:element ref="extensions" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+  <xsd:element name="Mutationsinhalt" type="MutationsinhaltType"/>
+  <xsd:complexType name="MutationsinhaltType">
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="Grundstueck"/>
+        <xsd:element ref="PersonGB"/>
+        <xsd:element ref="Recht"/>
+        <xsd:element ref="extensions"/>
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+</xsd:schema>

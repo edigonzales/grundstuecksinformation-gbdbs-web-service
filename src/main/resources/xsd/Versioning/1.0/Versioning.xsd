@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://schemas.terravis.ch/Versioning/1.0" 
+  targetNamespace="http://schemas.terravis.ch/Versioning/1.0" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0.1"
+  >
+
+<xsd:complexType  name="VersionType">
+  <xsd:sequence>
+    <xsd:element name="version">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="serviceEndpoint" type="xsd:anyURI" minOccurs="0"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="GetVersions" type="GetVersionsType"/>
+<xsd:complexType  name="GetVersionsType">
+  <xsd:sequence>
+    <xsd:element name="transactionId">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:normalizedString">
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="GetVersionsResponse" type="GetVersionsResponseType"/>
+<xsd:complexType  name="GetVersionsResponseType">
+  <xsd:sequence>
+    <xsd:element name="supportedVersion" type="VersionType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+</xsd:schema>

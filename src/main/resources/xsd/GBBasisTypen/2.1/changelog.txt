@@ -1,0 +1,168 @@
+2.1.6 2017-01-17 ceis
+*********************
+ComplexTaggedValue ergaenzt
+TaggedValue/asText ergaenzt; damit Empfaenger bei unbekannten Werten etwas anzeigen koenne
+RangNachfolge/Vorrang optional; damit von gbdbs20 transformiert werden kann
+Vorrang/RangNachfolge optional; damit von gbdbs20 transformiert werden kann
+
+2.1.3 2015-11-02 ceis
+*********************
+InhaltGrundstueck/Bemerkungen geloescht
+
+2.1.2 2015-02-06 ceis
+*********************
+neuer Namespace-Stamm http://schemas.geo.admin.ch/BJ/TGBV/
+InhaltRecht/begruendung geloescht
+Recht/InhaltVersion0Datum geloescht
+Glaeubiger/begruendung geloescht
+InhaltDienstbarkeit/mitNebenleistungspflicht ergaenzt (da schon in eGRISDM11 vorhanden)
+
+2.1.1 2014-09-17 ceis
+*********************
+begruendetAm attributeGroup umbenannt in gueltigVon
+"von" Prefix bei attributeGroup gueltigVon
+"bis" Prefix bei attributeGroup gueltigBis
+InhaltRecht/begruendung ergaenzt
+Recht/Errichtungsdatum umbenannt in Recht/InhaltVersion0Datum (Tagebuchdatum der 1. Version)
+Angaben zu Begruendung (BelegReferenz) bei BerechtigteRefBegruendet, GrundstueckRefBegruendet, PersonRefBegruendet, RechtRefBegruendet geloescht
+Grundsteuck/GrundstueckWert ergaenzt
+LastRechtDienstbarkeit/Berechtigte neu optional (wegen alten/existierenden Datenbestaenden)
+LastRechtGrundlast/Berechtigte neu optional (wegen alten/existierenden Datenbestaenden)
+mitgliedSpezifischerErwerbsgrund neu (um Erwerbsgrund in Bezug auf eine spezifische Person zu definieren)
+Flaeche geloescht
+Bergwerk/Flaeche ersetzt durch InhaltBergwerk/Flaechenmass, Bergwerk/liegt_auf, Bergwerk/letzteVollzogeneMutation
+SelbstaendigesDauerndesRecht/Flaeche ersetzt durch InhaltSelbstaendigesDauerndesRecht/Flaechenmass, SelbstaendigesDauerndesRecht/liegt_auf, SelbstaendigesDauerndesRecht/letzteVollzogeneMutation
+PersonStamm: Wie in 2.0.5, d.h. PersonStamm + eCH aktuelle Versionen
+NatuerlichePerson/Zivilstand: Aufzaehlwerte gem. eCH-0011
+globales Element GueltigBis geloescht (nicht benutzt)
+extensions bei allen Elementen (die UML-Klassen sind) ergaenzt 
+"unnoetige" Zwischenelemente entfernt
+
+2.1.0 2014-09-03 ceis
+*********************
+Namespace der GBDBS von 2.0 auf 2.1 geaendert
+Neue (aktuelle) Versionen der eCH Standards verwenden
+Grundbuchname bei Grundstueck ergaenzt (=Name fuer SubKreis+Los)
+Bemerkungen bei InhaltGrundstueck ergaenzt
+InhaltGrundstueck neu 0..* (wegen Grundstuecken, die nur als Kopie gefuehrt werden)
+Bodenbedeckung/ArtBezeichnung wird von 40 auf 80 Zeichen vergroessert.
+Gebaeude/Nummer wird von 12 auf 20 Stellen vergroessert.
+GBAmt optional (wegen Grundstuecken, die nur als Kopie gefuehrt werden)
+GrundstueckWert ergaenzt
+Grundstueck/Karte geloescht (wird nicht benutzt)
+Flaeche/liegt_auf neu 0..* (da z.T. nicht vorhanden, wenn AVGBS nicht eingeführt)
+InhaltDienstbarkeit/Detailbeschreibung geloescht (wird nicht benutzt)
+NatuerlichePersonGB/Vorname in Vornamen umbenannt
+NatuerlichePersonGB/Geburtsjahr: Wertebereich neu ohne Einschraenkung
+PersonStamm durch eCH-0011 und eCH-0098 ersetzt; PersonStamm ist im XSD immer noch enthalten und kann bei Bedarf als Extension transferiert werden
+NatuerlichePerson/Vorname in Vornamen umbenannt
+Feld SchweizerischeJuritischePerson/Gesellschaftsform erhaelt neu die Kardinalitaet 0..1
+NatuerlichePerson/Geburtsjahr: Wertebereich neu ohne Einschraenkung
+Eingetragene Partnerschaften als Zivilstand zusaetzlich erwaehnen
+Recht/Bemerkungen neu (bei Grundpfandrecht und EigentumAnteil geloescht)
+Recht/Errichtungsdatum neu
+EigentumAnteil/Bemerkung geloescht, wegen neuem Attribut Bemerkungen bei Recht
+Erwerbsgrund/mitgliedSpezifisch ergaenzt, fuer Bezug auf des Erwerbsgrunds auf ein bestimmtes Mitglied einer spezifischen Gemeinschaft.
+Grundpfandrecht/maxZinsfuss: Wertebereich neu ohne Einschraenkung
+Angaben zu Begruendung (BelegReferenz) bei BerechtigteRefBegruendet, GrundstueckRefBegruendet, PersonRefBegruendet, RechtRefBegruendet, Glaeubiger ergaenzt
+LastRechtVormerkung neu 0..* (fuer "Text"-Vormerkungen)
+LastRechtAnmerkung neu 0..* (fuer „Text“-Anmerkungen)
+"Ungueltig" zusaetzlich bei ArtDerErledigung aufnehmen (wegen GBV 91 Abs d)
+Dokument/Dateiname ergaenzt
+HaengigesGeschaeft/TagebuchDatumZeit neu type=DatumInklZeit (wie bei Anmeldung)
+HaengigesGeschaeft/GeschaeftsfallbeschreibungStichwort neu type=Stichwort (wie bei Anmeldung)
+RangNachfolge/Vorrang ergaenzt (damit beteiligtesGS klar ist)
+Vorrang/RangNachfolge ergaenzt (damit beteiligtesGS klar ist)
+
+2.0.5 2012-02-09 ceis
+*********************
+- Anmeldung/GeschaeftsfallbeschreibungStichwort neu optional
+- Erwerbsgrund/ErwerbsartStichwort neu optional
+- InhaltGrundlast/Gesamtwert neu optional
+- HaengigesGeschaeft/TagebuchDatumZeit neu maxLength=29
+- HaengigesGeschaeft/GeschaeftsfallbeschreibungStichwort neu ohne Laengenbeschraenkung
+
+2.0.3 2011-09-21 ceis
+*********************
+- Mutation/Mutationsinhalt neu optional; damit man ihn unterdruecken kann z.B. bei sehr umfangreichen Anmerkungen
+- Mutation/extensions ergaenzt
+- eGRISDM11: Bei Klasse "Dienstbarkeit" Attribut "mitNebenleistungspflicht" entfernt
+- Karte bereinigt; (anyURI fuer Verweise, base64 oder anyURI fuer Bild)
+- Dokument/Datei bereinigt; base64 oder anyURI fuer Inhalt)
+- Id's in getrennten Namespace ausgelagert
+
+2.0.2 2011-09-08 ceis
+*********************
+- Operation hat neu folgende Werte (INSERT,CANCEL,INSERTCANCEL)
+- Verwendung von begruendetAm bereinigt
+- eGRISDM11: Bei Klasse "NatuerlichePersonGB" neues historisierbares Attribut "Geschlecht"
+- eGRISDM11: Bei Klasse "NatuerlichePerson" neues Attribut "Rufname" 
+- eGRISDM11: Bei Klasse "NatuerlichePersonGB" neue historisierbare Attribute "Heimatort" und "Staatsan-gehoerigkeit"
+- eGRISDM11: Bei Klasse "JuristsichePersonGB" neues historisierbares Attribut "UID"
+- eGRISDM11: Bei Klasse "EigentumAnteil" neues historisierbares Attribut "Bemerkung"
+- eGRISDM11: Bei Klasse "Dienstbarkeit" neues historisierbares Attribut "mitNebenleistungspflicht"
+- eGRISDM11: Bei Klasse "Anmerkung" neues historisierbares Attribut "istOeffentlich"
+- GemeindeType durch eCH-0007:swissMunicipalityType ersetzt
+- eCH-0011:personType ergaenzt
+- eCH-0098:organisationType ergaenzt
+
+
+2.0.1 2011-06-20 ceis
+*********************
+- neues Attribut operationOrder um Ordung innerhalb einer Mutation zu definieren
+- TeilMutation neu Mutationsinhalt
+- Grundstueck/alt|neu kann nicht via Anmeldung geaendert werden
+- Dokument/Datei neu base64binary
+
+2.0.0 2011-03-30 ceis
+*********************
+- 1. Entwurf eGVT
+- Unterteilung in Basis, Auskunft, Datei und eGVT
+
+1.1.3 2011-03-25 ceis
+*********************
+- gbdbs:Grundstueck/Nummer optional, damit Liste der Grundstuecke pro Gemeinde ermittelt werden kann
+
+1.1.2 2011-03-18 ceis
+*********************
+- TeilMutation neu globales Element; damit referenzierbar/wiederverwendbar
+- Aenderungen von 1.0.8 uebernommen
+-   InhaltLiegenschaft/Flaechenmass, InhaltMiteigentumsAnteil/Beschreibung, InhaltGewoehnlichesSDR/Art, InhaltKonzession/Beschreibung neu optional (nur fuer Grundstuecke mit istKopie=true)
+-   neues Element InhaltBergwerk definiert; wegen Symmetrie zu Grundstueck-Vererbungshierarchie
+-   GetVersions() ergaenzt
+-   InhaltGewoehnlichesSDR/Beschreibung ergaenzt; damit man gegenueber der zugrundliegenden Dienstbarkeit eine unterschiedliche Beschreibung des SDR haben kann
+-   InhaltDienstbarkeit/istVerselbstaendigt ergaenzt, damit man erkennt welche Dienstbarkeiten dem SDR zugrundeliegen
+-   JuristischePerson, InhaltJuristischePersonGB: Sitz ist neu optional wegen oeffentlich-rechtlichen Koerperschften bei denen sich der Sitz aus dem Namen ergibt ("Politische Gemeinde Arosa")
+-   InhaltJuristischePersonGB: neue Attribute AuszugOhneSitz, AuszugOhneRechtsform (falls Sitz/Rechtform auch im Namen enthalten ist, kann deren (doppelte) Ausgabe mit den neuen Flags unterdrueckt werden)
+
+1.1.1 2010-09-23 ceis
+*********************
+- Exception ergaenzt
+- Bodenbedeckung/ArtBezeichnung neu TEXT*40 gem AVGBS
+- GestuetzAufGehoertZu und Rangverschiebung attributeGroup begruendetAm ergaenzt
+- GetParcelsByIdResponse/standDerDaten ergaenzt
+- TeilMutation.Notariatsdaten geloescht
+
+1.1.0 2010-06-01 ceis
+*********************
+- Dateibasierter Transfer dokumentiert
+- TeilMutation.Notariatsdaten neu optional; vermeidet leeres Element falls keine solchen Daten vorhanden/transferierbar
+- Recht.Rangverschiebung, Recht.GestuetzAufGehoertZu neu optional; vermeidet leeres Element falls keine solchen Daten vorhanden/transferierbar
+- import von xsd-Dateien in ein xsd:schema Element eingebettet (gem. WS-I Basic Profile 1.0)
+
+1.0.2 2010-05-10 ceis
+*********************
+- Recht.GestuetzAufGehoertZu ergaenzt (weil in eGRISDM vorhanden)
+- attrgrp begruendetAm bei beteiligtenGrundstuecken ergaenzt
+- Idx bei gueltigBis ergaenzt(fuer mehrere Zustaende innerhalb einer Anmeldung)
+- TeilMutation bei Mutationslieferung ergaenzt
+
+1.0.1 2010-04-27 ceis
+*********************
+- GBAmt bei Grundstueck eingefuegt, damit zustaendiges Amt im Auszug ersichtlich ist
+- Recht.alteNummer ergaenzt (weil gem. eGRISDM historisierbar)
+- internes schema in wsdl/types entfernt; mit import innerhalb xs:schema sind importierte typen nur innerhalb des wsdl:types sichtbar
+- GetCapabilitiesResponse.inclKarte entfernt, da diese Bezugsoption nicht mehr vorhanden
+- "Inhalt__" analog uebriger Typhierarchie, zur Vermeidung von MSXML Fehlermeldung "Elemente mit identischen Namen (...), die sich im gleichen Gueltigkeitsbereich befinden, muessen auch vom gleichen Typ sein."
+- neu Recht.Rangverschiebung damit Rangfolge unabhaengig vom uebrigen Inhalt historisierbar
+- schema z.T. geoeffnet, so dass Herstellerspezifische Erweiterungen ohne Typ-Erweiterungen moeglich sind 
