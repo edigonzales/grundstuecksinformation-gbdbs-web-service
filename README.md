@@ -14,4 +14,4 @@ curl -H "Content-Type: text/xml; charset=utf-8" -H "SOAPAction:$ACTION" -d@reque
 ```
 
 ## TODO:
-- Fix schemaLocation in `http://localhost:8080/ws/gbdbs.wsdl`
+- Fix schemaLocation in `http://localhost:8080/ws/gbdbs.wsdl`. Notfalls auf dem Filesystem rumschieben bis es passt.
