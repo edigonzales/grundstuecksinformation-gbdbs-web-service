@@ -27,7 +27,7 @@ public class WebServiceEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetParcelsByIdRequest")
     @ResponsePayload
-    public GetParcelsByIdResponse getParcelsById(@RequestPayload GetParcelsByIdRequestType request) {
+    public GetParcelsByIdResponse getParcelsById(@RequestPayload GetParcelsByIdRequestType request) throws Exception {
         ObjectFactory factory = new ObjectFactory();
 
         // TEST
@@ -39,6 +39,8 @@ public class WebServiceEndpoint {
             logger.info("falscher BezugInhalt");
             ch.admin.geo.schemas.bj.tgbv.gbdbs._2.Exception exception = factory.createException();
             exception.setMessage("falscher BezugInhalt");
+            
+            throw new Exception(); //IllegalArgumentException o.ä.
         }
         
         GetParcelsByIdResponse response = factory.createGetParcelsByIdResponse();
