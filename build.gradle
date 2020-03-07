@@ -60,7 +60,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'wsdl4j:wsdl4j:1.6.1'
+    runtimeOnly 'org.postgresql:postgresql'    
     jaxb("org.glassfish.jaxb:jaxb-xjc:2.3.2")
     compile(files(genJaxb.classesDir).builtBy(genJaxb))
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

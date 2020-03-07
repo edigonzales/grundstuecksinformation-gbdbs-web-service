@@ -62,7 +62,7 @@ public class DetailSoapFaultDefinitionExceptionResolver extends AbstractEndpoint
 
     @Override
     protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
-        if (ex instanceof Exception) { 
+        if (ex instanceof Exception) { // FIXME: Das ist jetzt ganz blöd, da jede Exception diese Fehlermeldung wirft
             
 
             final SoapMessage response = (SoapMessage) messageContext.getResponse();
