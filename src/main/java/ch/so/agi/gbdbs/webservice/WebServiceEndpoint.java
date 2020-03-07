@@ -99,7 +99,6 @@ public class WebServiceEndpoint {
             
             
             
-            
             JAXBElement<LiegenschaftType> jaxbLsType = new JAXBElement<LiegenschaftType>(_Liegenschaft_QNAME, LiegenschaftType.class, lsType);
             
             
