@@ -53,7 +53,7 @@ public class WebServiceEndpoint {
             ch.admin.geo.schemas.bj.tgbv.gbdbs._2.Exception exception = factory.createException();
             exception.setMessage("falscher BezugInhalt");
             
-            throw new Exception(); //IllegalArgumentException o.ä.
+            throw new Exception(); //IllegalArgumentException o.ä. -> Das ist momentan mit Exception() ganz doof!!! 
         }
         */
         
