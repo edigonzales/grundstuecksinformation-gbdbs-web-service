@@ -116,7 +116,8 @@ public class WebServiceEndpoint {
     }
     
     /*
-     * SELECT 
+     * 
+SELECT 
     ST_Area(ST_Union(geom)) AS flaeche, art
 FROM 
 (
@@ -131,6 +132,8 @@ FROM
     WHERE 
         g.egris_egrid = 'CH955832730623'
 ) AS foo
+WHERE 
+    ST_IsValid(geom) IS TRUE 
 GROUP BY 
     art
      */
