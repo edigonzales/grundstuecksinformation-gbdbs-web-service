@@ -134,8 +134,9 @@ FROM
 ) AS foo
 WHERE 
     ST_IsValid(geom) IS TRUE 
+AND 
+    geom IS NOT NULL
 GROUP BY 
     art
-     */
     
 }
