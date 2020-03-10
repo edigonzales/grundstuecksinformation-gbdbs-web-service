@@ -115,6 +115,7 @@ public class WebServiceEndpoint {
         grundstueckType.setNummer("nummer nummer");
     }
     
+}
     /*
      * 
 SELECT 
