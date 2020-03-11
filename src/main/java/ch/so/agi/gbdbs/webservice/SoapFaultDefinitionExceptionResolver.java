@@ -22,43 +22,13 @@ import org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionReso
 import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.ObjectFactory;
 
 @Component
-public class DetailSoapFaultDefinitionExceptionResolver extends AbstractEndpointExceptionResolver {
+public class SoapFaultDefinitionExceptionResolver extends AbstractEndpointExceptionResolver {
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 
     private static final ObjectFactory FACTORY = new ObjectFactory();
 
     @Autowired
     Jaxb2Marshaller marshaller;
-
-//    @Override
-//    protected void customizeFault(Object endpoint, Exception ex, SoapFault fault) {
-//        logger.warn("Exception processed ", ex);
-//        if (ex instanceof Exception) {
-//            
-//            /*
-//            ServiceStatus status = ((ServiceFaultException) ex).getServiceStatus();
-//            SoapFaultDetail detail = fault.addFaultDetail();
-//            detail.addFaultDetailElement(CODE).addText(status.getStatusCode());
-//            detail.addFaultDetailElement(MESSAGE).addText(status.getMessage());
-//            */
-//            
-//            ObjectFactory factory = new ObjectFactory();
-//            ch.admin.geo.schemas.bj.tgbv.gbdbs._2.Exception exception = factory.createException();
-//            exception.setMessage("falscher BezugInhalt");
-//            
-//            QName MESSAGE = new QName("message");
-//
-//            SoapFaultDetail faultDetail = fault.addFaultDetail();
-//            Result result = faultDetail.getResult();
-//            
-//            result.
-//            
-//            
-//            faultDetail.addFaultDetailElement(MESSAGE).addText("gagag");
-//            
-//            
-//        }
-//    }
 
     @Override
     protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
@@ -92,7 +62,6 @@ public class DetailSoapFaultDefinitionExceptionResolver extends AbstractEndpoint
 //                logger.error("Could not marshall Exception type", e);
 //            }
 //
-
         }
         return false; // Exception not handled.
     }

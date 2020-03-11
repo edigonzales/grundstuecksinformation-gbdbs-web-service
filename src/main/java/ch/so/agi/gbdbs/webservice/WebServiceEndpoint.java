@@ -1,5 +1,8 @@
 package ch.so.agi.gbdbs.webservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -11,6 +14,7 @@ import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.SelbstaendigesDauerndesRecht
 import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.BezugInhalt;
 import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.GetParcelsByIdRequestType;
 import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.GetParcelsByIdResponse;
+import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.GetParcelsByIdResponse.Grundstueck;
 import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.ObjectFactory;
 
 import java.util.GregorianCalendar;
@@ -37,6 +41,12 @@ public class WebServiceEndpoint {
     private static final String NAMESPACE_URI = "http://schemas.geo.admin.ch/BJ/TGBV/GBDBS/2.1";
     private static final QName _Liegenschaft_QNAME = new QName("http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1", "Liegenschaft");
     
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    
+    @Value("${gbdbs.dbschema}")
+    private String dbschema;
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetParcelsByIdRequest")
     @ResponsePayload
     public GetParcelsByIdResponse getParcelsById(@RequestPayload GetParcelsByIdRequestType request) throws Exception {
@@ -60,7 +70,43 @@ public class WebServiceEndpoint {
         GetParcelsByIdResponse response = factory.createGetParcelsByIdResponse();
         
         for (String id : request.getIds()) {
-            logger.info(id.substring(0, 14));
+            // Support only egrid at the moment.
+            String egrid;
+            try {
+                egrid = id.split(":")[0].substring(0, 14);
+            } catch (StringIndexOutOfBoundsException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage());
+                throw new IllegalArgumentException("egrid was not found in <Id>");
+            }
+            
+            String parcelType = getParcelType(egrid);
+            GrundstueckType grundstueckType = null;
+            JAXBElement<? extends GrundstueckType> grundstueckTypeElement = null;
+
+            if (parcelType.equalsIgnoreCase("Liegenschaft")) {
+                grundstueckType = new LiegenschaftType();
+                
+                
+                
+                grundstueckTypeElement = new JAXBElement<LiegenschaftType>(_Liegenschaft_QNAME, LiegenschaftType.class, (LiegenschaftType) grundstueckType);
+            } else if (parcelType.contains("SelbstRecht")) {
+                //<GewoehnlichesSDR>
+                
+                // DauerndesRechtArt:
+                //value="Baurecht"/>
+                //value="Quellenrecht"/>
+                //value="Konzession"/>
+                //value="weitere"/>
+
+            } else if (parcelType.equalsIgnoreCase("Bergwerk")) {
+                // BergwerkType?
+            }
+            
+            // common attributes
+            grundstueckType.setId(UUID.randomUUID().toString());
+            
+            
             
             // FIXME: use real date from database
             try {
@@ -74,7 +120,7 @@ public class WebServiceEndpoint {
                 throw new IllegalStateException(e);
             }
             
-            ch.admin.geo.schemas.bj.tgbv.gbdbs._2.GetParcelsByIdResponse.Grundstueck grundstueck = factory.createGetParcelsByIdResponseGrundstueck();
+            Grundstueck grundstueck = factory.createGetParcelsByIdResponseGrundstueck();
             
             LiegenschaftType lsType = new LiegenschaftType();
             lsType.setGrundbuchname("Grundbuchname");
@@ -90,20 +136,22 @@ public class WebServiceEndpoint {
             sdr.setNummer("fooo");
             
             
-            GrundstueckType grundstueckType = new LiegenschaftType();
+            //GrundstueckType grundstueckType = new LiegenschaftType();
             
-            if (grundstueckType instanceof LiegenschaftType) {
-                logger.info("fubar");
-            }
- 
-            
-            
-            
-            JAXBElement<LiegenschaftType> jaxbLsType = new JAXBElement<LiegenschaftType>(_Liegenschaft_QNAME, LiegenschaftType.class, lsType);
-            
-            
-            
-            grundstueck.setGrundstueck(jaxbLsType);
+//            if (grundstueckType instanceof LiegenschaftType) {
+//                logger.info("fubar");
+//            }
+// 
+//            
+//            
+//            
+//            JAXBElement<LiegenschaftType> jaxbLsType = new JAXBElement<LiegenschaftType>(_Liegenschaft_QNAME, LiegenschaftType.class, lsType);
+//            
+//            
+//            
+          
+
+            grundstueck.setGrundstueck(grundstueckTypeElement);
             
             response.getGrundstuecks().add(grundstueck);    
        }
@@ -114,7 +162,27 @@ public class WebServiceEndpoint {
     private void setNummer(GrundstueckType grundstueckType) {
         grundstueckType.setNummer("nummer nummer");
     }
-    
+
+    // TODO: -> alles returnen, was mit gebraucht wird:
+    // - Flächenmass
+    // - Gemeinde (bfsnr, SO, name)
+    // - Grundbuch
+    // - GB-Name
+    private String getParcelType(String egrid) {
+        // CH955832730623 = Liegenschaft
+        // CH707406053288 = SelbstRecht.Baurecht
+        // CH527732831247 = SelbstRecht.Quellenrecht
+        // CH367883126943 = SelbstRecht.Konzessionsrecht
+        // CH327840831216 = SelbstRecht.weitere
+        // CH487706867746 = Bergwerk
+        String sql = "SELECT art FROM "+getSchema()+"."+TABLE_DM01VCH24LV95DLIEGENSCHAFTEN_GRUNDSTUECK+" WHERE egris_egrid = 'CH955832730623'";
+        String parcelType = jdbcTemplate.queryForObject(sql, new Object[] {}, String.class);
+        return parcelType;
+    }
+ 
+    private String getSchema() {
+        return dbschema!=null?dbschema:"xgbdbs";
+    }
 }
     /*
      * 
