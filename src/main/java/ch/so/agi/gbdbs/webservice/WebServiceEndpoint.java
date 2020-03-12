@@ -222,7 +222,12 @@ public class WebServiceEndpoint {
     }
     
     private void setGebaeude(GrundstueckType grundstueckType, Geometry geometry) {
-        
+        WKBWriter geomEncoder = new WKBWriter(2, ByteOrderValues.BIG_ENDIAN);
+        byte wkbGeometry[] = geomEncoder.write(geometry);
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("geom", wkbGeometry);
+
     }
     
     private void setFlurnamen(GrundstueckType grundstueckType, Geometry geometry) {
