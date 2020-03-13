@@ -26,7 +26,7 @@ curl <<-EOF -fsSL -H "content-type: text/xml" -d @- http://localhost:8080/ws > r
       <ns:transactionId>RAUM-14922-1</ns:transactionId>
       <ns:BezugInhalt>IndexMitEigentum</ns:BezugInhalt>
       <ns:includeHistory>true</ns:includeHistory>
-      <ns:Id>CH310663327779::::</ns:Id>
+      <ns:Id>CH907006873276::::</ns:Id>
     </ns:GetParcelsByIdRequest>
   </soapenv:Body>
 </soapenv:Envelope>

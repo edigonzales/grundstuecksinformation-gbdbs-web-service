@@ -20,6 +20,8 @@ import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.Bodenbedeckung;
 import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.Extensions;
 import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.Flurname;
 import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.GBAmt;
+import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.Gebaeude;
+import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.GebaeudeeingangAdresse;
 import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.GrundstueckType;
 import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.InhaltGrundstueckType;
 import ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.InhaltLiegenschaftType;
@@ -70,7 +72,11 @@ public class WebServiceEndpoint {
     private static final String TABLE_DM01VCH24LV95DLIEGENSCHAFTEN_GRUNDSTUECK = "dm01vch24lv95dliegenschaften_grundstueck";
     private static final String TABLE_DM01VCH24LV95DGEMEINDEGRENZEN_GEMEINDE = "dm01vch24lv95dgemeindegrenzen_gemeinde";  
     private static final String TABLE_DM01VCH24LV95DBODENBEDECKUNG_BOFLAECHE  = "dm01vch24lv95dbodenbedeckung_boflaeche"; 
+    private static final String TABLE_DM01VCH24LV95DBODENBEDECKUNG_GEBAEUDENUMMER = "dm01vch24lv95dbodenbedeckung_gebaeudenummer";
     private static final String TABLE_DM01VCH24LV95NOMENKLATUR_FLURNAME = "dm01vch24lv95dnomenklatur_flurname";
+    private static final String TABLE_PLZOCH1LV95DPLZORTSCHAFT_PLZ6 = "plzoch1lv95dplzortschaft_plz6";
+    private static final String TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_GEBAEUDEEINGANG = "dm01vch24lv95dgebaeudeadressen_gebaeudeeingang";
+    private static final String TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_LOKALISATIONSNAME = "dm01vch24lv95dgebaeudeadressen_lokalisationsname"; 
     private static final String TABLE_SO_G_V_0180822GRUNDBUCHKREISE_GRUNDBUCHKREIS = "so_g_v_0180822grundbuchkreise_grundbuchkreis";
 
     private static final String NAMESPACE_URI = "http://schemas.geo.admin.ch/BJ/TGBV/GBDBS/2.1";
@@ -227,6 +233,54 @@ public class WebServiceEndpoint {
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("geom", wkbGeometry);
+        
+        List<String> gebauedeList = jdbcParamTemplate.query("SELECT bb.t_id AS bb_t_id, lokname.atext AS strassenname, ge.hausnummer, plz.plz, ortname.atext AS ortschaft, ge.astatus, ge.lage, ge.gwr_egid AS geb_egid, ge.gwr_edid, bbnr.gwr_egid AS bb_egid \n" + 
+                "FROM \n" + 
+                "    "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_GEBAEUDEEINGANG+" AS ge \n" + 
+                "    LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_LOKALISATIONSNAME+" AS lokname \n" + 
+                "    ON ge.gebaeudeeingang_von = lokname.benannte \n" + 
+                "    LEFT JOIN (SELECT t_id, geometrie FROM "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_BOFLAECHE+" WHERE art = 'Gebaeude') AS bb \n" + 
+                "    ON ST_Intersects(ge.lage, bb.geometrie) \n" + 
+                "    LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_GEBAEUDENUMMER+" AS bbnr \n" + 
+                "    ON bbnr.gebaeudenummer_von = bb.t_id \n" +
+                "    LEFT JOIN live.plzoch1lv95dplzortschaft_ortschaft AS ort \n" + 
+                "    ON ST_Intersects(ge.lage, ort.flaeche) \n" + 
+                "    LEFT JOIN live.plzoch1lv95dplzortschaft_ortschaftsname AS ortname \n" + 
+                "    ON ortname.ortschaftsname_von = ort.t_id \n" +
+                "    LEFT JOIN "+getSchema()+"."+TABLE_PLZOCH1LV95DPLZORTSCHAFT_PLZ6+" AS plz \n" + 
+                "    ON ST_Intersects(ge.lage, plz.flaeche ) \n" + 
+                "WHERE ge.istoffiziellebezeichnung = 'ja'AND ge.astatus = 'real' AND ge.im_gebaeude = 'BB' AND ST_Intersects(ge.lage, ST_GeomFromWKB(:geom,2056))", parameters, new RowMapper<String>() {
+
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                String strasse = rs.getString("strassenname");
+                String hausnummer = rs.getString("hausnummer");
+                String plz = rs.getString("plz");
+                String ortschaft = rs.getString("ortschaft");
+                String status = rs.getString("astatus");
+                String egid = rs.getString("bb_egid") != null ? rs.getString("bb_egid") : rs.getString("geb_egid");
+                int edid = rs.getInt("gwr_edid");
+                
+                logger.info(rs.getString("bb_t_id"));
+                
+                Gebaeude gebaeude = gbbasistypenFactory.createGebaeude();
+                GebaeudeeingangAdresse gebaeudeeingangAdresse = gbbasistypenFactory.createGebaeudeeingangAdresse();
+                gebaeudeeingangAdresse.setStrasse(strasse);
+                gebaeudeeingangAdresse.setHausnummer(hausnummer);
+                gebaeudeeingangAdresse.setPLZ(Integer.valueOf(plz));
+                gebaeudeeingangAdresse.setOrtschaft(ortschaft);
+                if (egid != null) gebaeudeeingangAdresse.setGWREGID(Integer.valueOf(egid));
+                gebaeudeeingangAdresse.setGWREDID(edid);
+                
+                gebaeude.setIstProjektiert(false);
+                gebaeude.setIstUnterirdisch(false);
+//                gebaeude.getGebaeudeeingangAdresses()
+                
+                return "foo";
+            }
+            
+        });
+       
 
     }
     
@@ -275,7 +329,6 @@ public class WebServiceEndpoint {
                 bb.setArt(BBArt.fromValue(art));
                 bb.setArtBezeichnung(art);
                 bb.setFlaechenmass(new BigDecimal(Math.round(10000*flaechenmass)).movePointLeft(4));
-//                bb.setFlaechenmass(new BigDecimal(flaechenmass));
                 
                 return bb;
             } 
@@ -293,6 +346,7 @@ public class WebServiceEndpoint {
         // CH487706867746 = Bergwerk
         // CH310663327779 = mehrere Flurnamen
         // CH493273420604 = Grenchen GB-Nr. 4000
+        // CH907006873276 = Roamer-Gebäude: 1 BB mit zwei Eingängen
 
         // Mehr oder weniger copy/paste from oereb-web-service.
         // Ist ziemlich smart gemacht, da es z.B. auch "Multipolygon"-Liegenschaften
