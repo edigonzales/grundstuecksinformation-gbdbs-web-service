@@ -263,7 +263,7 @@ public class WebServiceEndpoint {
 
             @Override
             public Gebaeude mapRow(ResultSet rs, int rowNum) throws SQLException {
-                logger.info("bb t_id: " + rs.getString("t_id"));
+                logger.debug("bb t_id: " + rs.getString("t_id"));
                 
                 Geometry gebaeudeGeometry = null;
                 try {
@@ -284,13 +284,13 @@ public class WebServiceEndpoint {
                 
                 Geometry intersection = null;
                 intersection = parcelGeom.intersection(gebaeudeGeometry);
-                logger.info(intersection.toString());
-                logger.info("intersection.getArea() {}", intersection.getArea());
+                logger.debug(intersection.toString());
+                logger.debug("intersection.getArea() {}", intersection.getArea());
                 
                 double intersectionArea = intersection.getArea();
                 double gebaeudeArea = gebaeudeGeometry.getArea();
-                logger.info("intersectionArea {}", intersectionArea);
-                logger.info("gebaeudeArea {}", gebaeudeArea);
+                logger.debug("intersectionArea {}", intersectionArea);
+                logger.debug("gebaeudeArea {}", gebaeudeArea);
                 
                 // Ignore building if it is less than minIntersection on the parcel.
                 if (intersection.isEmpty() || intersectionArea < minIntersection) {
@@ -349,13 +349,10 @@ public class WebServiceEndpoint {
                         return gebaeudeeingangAdresse;
                     }
                 }, gebaeudeWkbGeometry);
-                
                 gebaeude.getGebaeudeeingangAdresses().addAll(adressenList);
-                
                 return gebaeude;
             }            
         }, parcelWkbGeometry, parcelWkbGeometry);
-        
         grundstueckType.getGebaeudes().addAll(gebaeudeList);
     }
     
@@ -376,11 +373,9 @@ public class WebServiceEndpoint {
                 
                 Flurname flurname = gbbasistypenFactory.createFlurname();
                 flurname.setName(name);
-                
                 return flurname;
             } 
         });
-
         grundstueckType.getFlurnames().addAll(flurnameList);
     }
     
