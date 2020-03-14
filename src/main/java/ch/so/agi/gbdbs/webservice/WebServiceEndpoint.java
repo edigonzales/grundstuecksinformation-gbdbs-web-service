@@ -72,7 +72,11 @@ public class WebServiceEndpoint {
     private static final String TABLE_DM01VCH24LV95DLIEGENSCHAFTEN_GRUNDSTUECK = "dm01vch24lv95dliegenschaften_grundstueck";
     private static final String TABLE_DM01VCH24LV95DGEMEINDEGRENZEN_GEMEINDE = "dm01vch24lv95dgemeindegrenzen_gemeinde";  
     private static final String TABLE_DM01VCH24LV95DBODENBEDECKUNG_BOFLAECHE  = "dm01vch24lv95dbodenbedeckung_boflaeche"; 
+    private static final String TABLE_DM01VCH24LV95DBODENBEDECKUNG_PROJBOFLAECHE  = "dm01vch24lv95dbodenbedeckung_projboflaeche"; 
     private static final String TABLE_DM01VCH24LV95DBODENBEDECKUNG_GEBAEUDENUMMER = "dm01vch24lv95dbodenbedeckung_gebaeudenummer";
+    private static final String TABLE_DM01VCH24LV95DBODENBEDECKUNG_PROJGEBAEUDENUMMER = "dm01vch24lv95dbodenbedeckung_projgebaeudenummer";
+    private static final String TABLE_DM01VCH24LV95DEINZELOBJEKTE_EINZELOBJEKT  = "dm01vch24lv95deinzelobjekte_einzelobjekt"; 
+    private static final String TABLE_DM01VCH24LV95DEINZELOBJEKTE_FLAECHENELEMENT  = "dm01vch24lv95deinzelobjekte_flaechenelement"; 
     private static final String TABLE_DM01VCH24LV95NOMENKLATUR_FLURNAME = "dm01vch24lv95dnomenklatur_flurname";
     private static final String TABLE_PLZOCH1LV95DPLZORTSCHAFT_PLZ6 = "plzoch1lv95dplzortschaft_plz6";
     private static final String TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_GEBAEUDEEINGANG = "dm01vch24lv95dgebaeudeadressen_gebaeudeeingang";
@@ -92,6 +96,9 @@ public class WebServiceEndpoint {
 
     @Value("${gbdbs.dbschema}")
     private String dbschema;
+    
+    @Value("${gbdbs.minIntersection:1}")
+    private double minIntersection;
     
     ch.admin.geo.schemas.bj.tgbv.gbdbs._2.ObjectFactory gbdbsFactory = new ch.admin.geo.schemas.bj.tgbv.gbdbs._2.ObjectFactory();
     ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.ObjectFactory gbbasistypenFactory = new ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.ObjectFactory();
@@ -157,7 +164,7 @@ public class WebServiceEndpoint {
                 // BergwerkType?
             }
             
-            // common attributes for types
+            // Common attributes for all types.
             grundstueckType.setId(UUID.randomUUID().toString());
             // Serialisierte Form der GrundstueckNummer. EGRID:Nummer:NummerZusatz:SubKreis:Los
             grundstueckType.setNummer(egrid+":"+parcel.getNummer()+"::"+String.valueOf(Optional.ofNullable(parcel.getGbSubKreisNummer()).orElse(""))+":");
@@ -227,61 +234,129 @@ public class WebServiceEndpoint {
         
     }
     
-    private void setGebaeude(GrundstueckType grundstueckType, Geometry geometry) {
+    // TODO: unterirdische Gebäude und projektierte.
+    private void setGebaeude(GrundstueckType grundstueckType, Geometry parcelGeom) {
         WKBWriter geomEncoder = new WKBWriter(2, ByteOrderValues.BIG_ENDIAN);
-        byte wkbGeometry[] = geomEncoder.write(geometry);
+        byte parcelWkbGeometry[] = geomEncoder.write(parcelGeom);
 
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("geom", wkbGeometry);
+        PrecisionModel precisionModel = new PrecisionModel(1000.0);
+        GeometryFactory geomFactory = new GeometryFactory(precisionModel);
+
+//        MapSqlParameterSource parameters = new MapSqlParameterSource();
+//        parameters.addValue("geom", wkbGeometry);
         
-        List<String> gebauedeList = jdbcParamTemplate.query("SELECT bb.t_id AS bb_t_id, lokname.atext AS strassenname, ge.hausnummer, plz.plz, ortname.atext AS ortschaft, ge.astatus, ge.lage, ge.gwr_egid AS geb_egid, ge.gwr_edid, bbnr.gwr_egid AS bb_egid \n" + 
-                "FROM \n" + 
-                "    "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_GEBAEUDEEINGANG+" AS ge \n" + 
-                "    LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_LOKALISATIONSNAME+" AS lokname \n" + 
-                "    ON ge.gebaeudeeingang_von = lokname.benannte \n" + 
-                "    LEFT JOIN (SELECT t_id, geometrie FROM "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_BOFLAECHE+" WHERE art = 'Gebaeude') AS bb \n" + 
-                "    ON ST_Intersects(ge.lage, bb.geometrie) \n" + 
-                "    LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_GEBAEUDENUMMER+" AS bbnr \n" + 
-                "    ON bbnr.gebaeudenummer_von = bb.t_id \n" +
-                "    LEFT JOIN live.plzoch1lv95dplzortschaft_ortschaft AS ort \n" + 
-                "    ON ST_Intersects(ge.lage, ort.flaeche) \n" + 
-                "    LEFT JOIN live.plzoch1lv95dplzortschaft_ortschaftsname AS ortname \n" + 
-                "    ON ortname.ortschaftsname_von = ort.t_id \n" +
-                "    LEFT JOIN "+getSchema()+"."+TABLE_PLZOCH1LV95DPLZORTSCHAFT_PLZ6+" AS plz \n" + 
-                "    ON ST_Intersects(ge.lage, plz.flaeche ) \n" + 
-                "WHERE ge.istoffiziellebezeichnung = 'ja'AND ge.astatus = 'real' AND ge.im_gebaeude = 'BB' AND ST_Intersects(ge.lage, ST_GeomFromWKB(:geom,2056))", parameters, new RowMapper<String>() {
+        // DICTINCT ON ist eigentlich unnötig, da fachlich nur eine 1:1-Beziehung erlaubt ist.
+        String stmt = "SELECT DISTINCT ON (bb.t_id) bb.t_id, ST_AsBinary(bb.geometrie) as geometrie, gwr_egid, 'realisiert' AS status \n" + 
+                "FROM \n" +
+                "     "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_BOFLAECHE+" AS bb \n" + 
+                "     LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_GEBAEUDENUMMER+" AS bbnr ON bbnr.gebaeudenummer_von = bb.t_id\n" + 
+                "WHERE art = 'Gebaeude' AND ST_DWithin(ST_GeomFromWKB(?,2056), bb.geometrie, 0.1) \n" +
+                "UNION ALL \n" +
+                "SELECT DISTINCT ON (bb.t_id) bb.t_id, ST_AsBinary(bb.geometrie) as geometrie, gwr_egid, 'projektiert' AS status \n" + 
+                "FROM \n" +
+                "     "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_PROJBOFLAECHE+" AS bb \n" + 
+                "     LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_PROJGEBAEUDENUMMER+" AS bbnr ON bbnr.projgebaeudenummer_von = bb.t_id\n" + 
+                "WHERE art = 'Gebaeude' AND ST_DWithin(ST_GeomFromWKB(?,2056), bb.geometrie, 0.1)";
+               
+        List<Gebaeude> gebaeudeList = jdbcTemplate.query(stmt, new RowMapper<Gebaeude>() {
+            WKBReader decoder=new WKBReader(geomFactory);
 
             @Override
-            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                String strasse = rs.getString("strassenname");
-                String hausnummer = rs.getString("hausnummer");
-                String plz = rs.getString("plz");
-                String ortschaft = rs.getString("ortschaft");
-                String status = rs.getString("astatus");
-                String egid = rs.getString("bb_egid") != null ? rs.getString("bb_egid") : rs.getString("geb_egid");
-                int edid = rs.getInt("gwr_edid");
+            public Gebaeude mapRow(ResultSet rs, int rowNum) throws SQLException {
+                logger.info("bb t_id: " + rs.getString("t_id"));
                 
-                logger.info(rs.getString("bb_t_id"));
+                Geometry gebaeudeGeometry = null;
+                try {
+                    gebaeudeGeometry = decoder.read(rs.getBytes("geometrie"));
+                }  catch (ParseException e) {
+                    throw new IllegalStateException(e);
+                }
+                String bb_egid = rs.getString("gwr_egid");
                 
                 Gebaeude gebaeude = gbbasistypenFactory.createGebaeude();
-                GebaeudeeingangAdresse gebaeudeeingangAdresse = gbbasistypenFactory.createGebaeudeeingangAdresse();
-                gebaeudeeingangAdresse.setStrasse(strasse);
-                gebaeudeeingangAdresse.setHausnummer(hausnummer);
-                gebaeudeeingangAdresse.setPLZ(Integer.valueOf(plz));
-                gebaeudeeingangAdresse.setOrtschaft(ortschaft);
-                if (egid != null) gebaeudeeingangAdresse.setGWREGID(Integer.valueOf(egid));
-                gebaeudeeingangAdresse.setGWREDID(edid);
-                
-                gebaeude.setIstProjektiert(false);
+                if (rs.getString("status").equalsIgnoreCase("realisiert")) {
+                    gebaeude.setIstProjektiert(false);
+                } else {
+                    gebaeude.setIstProjektiert(true);
+                }
                 gebaeude.setIstUnterirdisch(false);
-//                gebaeude.getGebaeudeeingangAdresses()
+                if (bb_egid != null) gebaeude.setGWREGID(Integer.valueOf(bb_egid));
                 
-                return "foo";
-            }
-            
-        });
-       
+                Geometry intersection = null;
+                intersection = parcelGeom.intersection(gebaeudeGeometry);
+                logger.info(intersection.toString());
+                logger.info("intersection.getArea() {}", intersection.getArea());
+                
+                double intersectionArea = intersection.getArea();
+                double gebaeudeArea = gebaeudeGeometry.getArea();
+                logger.info("intersectionArea {}", intersectionArea);
+                logger.info("gebaeudeArea {}", gebaeudeArea);
+                
+                // Ignore building if it is less than minIntersection on the parcel.
+                if (intersection.isEmpty() || intersectionArea < minIntersection) {
+                    return null;
+                }
+                
+                // Falls der Unterschied zwischen dem Gebäude-Grundstück-Verschnitt und 
+                // dem gesamten Gebäude kleiner als minIntersection ist, ist das Gebäude
+                // vollständig auf dem Grundstück.
+                if (Math.abs(intersectionArea - gebaeudeArea) < minIntersection) {
+                    gebaeude.setFlaechenmass(new BigDecimal(Math.round(10000*gebaeudeArea)).movePointLeft(4));
+                } else {
+                    gebaeude.setFlaechenmassAnteil(new BigDecimal(Math.round(10000*intersectionArea)).movePointLeft(4));
+                }
+                
+                
+                // TODO: handling von projektiert/realisert!!
+                
+                
+                
+                byte gebaeudeWkbGeometry[] = geomEncoder.write(gebaeudeGeometry);
 
+                String stmt = "SELECT ge.t_id, lokname.atext AS strassenname, ge.hausnummer, plz.plz, ortname.atext AS ortschaft, ge.astatus, ge.lage, ge.gwr_egid AS geb_egid, ge.gwr_edid \n" +
+                        "FROM \n" +
+                        "    "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_GEBAEUDEEINGANG+" AS ge \n" + 
+                        "    LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_LOKALISATIONSNAME+" AS lokname \n" + 
+                        "    ON ge.gebaeudeeingang_von = lokname.benannte \n" + 
+                        "    LEFT JOIN "+getSchema()+".plzoch1lv95dplzortschaft_ortschaft AS ort \n" + 
+                        "    ON ST_Intersects(ge.lage, ort.flaeche) \n" + 
+                        "    LEFT JOIN "+getSchema()+".plzoch1lv95dplzortschaft_ortschaftsname AS ortname \n" + 
+                        "    ON ortname.ortschaftsname_von = ort.t_id \n" +
+                        "    LEFT JOIN "+getSchema()+"."+TABLE_PLZOCH1LV95DPLZORTSCHAFT_PLZ6+" AS plz \n" + 
+                        "    ON ST_Intersects(ge.lage, plz.flaeche ) \n" + 
+                        "WHERE ge.istoffiziellebezeichnung = 'ja' AND ge.astatus = 'real' AND ge.im_gebaeude = 'BB' AND ST_Intersects(ge.lage, ST_GeomFromWKB(?,2056))";
+                
+                List<GebaeudeeingangAdresse> adressenList = jdbcTemplate.query(stmt, new RowMapper<GebaeudeeingangAdresse>() {
+                    @Override
+                    public GebaeudeeingangAdresse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        String strassenname = rs.getString("strassenname");
+                        String hausnummer = rs.getString("hausnummer");
+                        String plz = rs.getString("plz");
+                        String ortschaft = rs.getString("ortschaft");
+                        String geb_egid = rs.getString("geb_egid");
+                        String gwr_edid = rs.getString("gwr_edid");
+                        
+                        // TODO: Soll geprüft werden, ob der Eingang auf dem Grundstück liegt?
+                        // Kann entweder hier gemacht werden oder bereits in der Query.
+                        GebaeudeeingangAdresse gebaeudeeingangAdresse = gbbasistypenFactory.createGebaeudeeingangAdresse();
+                        gebaeudeeingangAdresse.setStrasse(strassenname);
+                        gebaeudeeingangAdresse.setHausnummer(hausnummer);
+                        gebaeudeeingangAdresse.setPLZ(Integer.valueOf(plz));
+                        gebaeudeeingangAdresse.setOrtschaft(ortschaft);
+                        if (geb_egid != null) gebaeudeeingangAdresse.setGWREGID(Integer.valueOf(geb_egid));
+                        if (gwr_edid != null) gebaeudeeingangAdresse.setGWREDID(Integer.valueOf(gwr_edid));
+                        
+                        return gebaeudeeingangAdresse;
+                    }
+                }, gebaeudeWkbGeometry);
+                
+                gebaeude.getGebaeudeeingangAdresses().addAll(adressenList);
+                
+                return gebaeude;
+            }            
+        }, parcelWkbGeometry, parcelWkbGeometry);
+        
+        grundstueckType.getGebaeudes().addAll(gebaeudeList);
     }
     
     private void setFlurnamen(GrundstueckType grundstueckType, Geometry geometry) {
@@ -347,6 +422,8 @@ public class WebServiceEndpoint {
         // CH310663327779 = mehrere Flurnamen
         // CH493273420604 = Grenchen GB-Nr. 4000
         // CH907006873276 = Roamer-Gebäude: 1 BB mit zwei Eingängen
+        // CH670679613281 = Überbauung beim Bahnhof: viele Eingänge und Hausnummern. Angrenzendes Gebäude.
+        // CH729921320631 = Neue (projektiert) Überbauung "Hufeisen" in Biberist beim Spital.
 
         // Mehr oder weniger copy/paste from oereb-web-service.
         // Ist ziemlich smart gemacht, da es z.B. auch "Multipolygon"-Liegenschaften

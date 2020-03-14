@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'ch.so.agi'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 configurations {
     jaxb
@@ -62,6 +62,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'wsdl4j:wsdl4j:1.6.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'    
     compile group: 'org.locationtech.jts', name: 'jts-core', version: '1.16.1'
     compile group: 'org.locationtech.jts', name: 'jts-io', version: '1.16.1', ext: 'pom'    
     runtimeOnly 'org.postgresql:postgresql'    
