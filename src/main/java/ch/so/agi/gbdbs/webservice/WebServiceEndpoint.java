@@ -34,7 +34,7 @@ import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.GetParcelsByIdResponse.Grundstueck;
 import ch.ech.xmlns.ech_0007._6.CantonAbbreviationType;
 import ch.ech.xmlns.ech_0007._6.Gemeinde;
 import ch.ech.xmlns.ech_0010._6.OrganisationMailAddressInfoType;
-import ch.ech.xmlns.ech_0010._6.OrganisationMailAdress;
+//import ch.ech.xmlns.ech_0010._6.OrganisationMailAdress;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -77,8 +77,11 @@ public class WebServiceEndpoint {
     private static final String TABLE_DM01VCH24LV95DBODENBEDECKUNG_PROJGEBAEUDENUMMER = "dm01vch24lv95dbodenbedeckung_projgebaeudenummer";
     private static final String TABLE_DM01VCH24LV95DEINZELOBJEKTE_EINZELOBJEKT  = "dm01vch24lv95deinzelobjekte_einzelobjekt"; 
     private static final String TABLE_DM01VCH24LV95DEINZELOBJEKTE_FLAECHENELEMENT  = "dm01vch24lv95deinzelobjekte_flaechenelement"; 
+    private static final String TABLE_DM01VCH24LV95DEINZELOBJEKTE_OBJEKTNUMMER  = "dm01vch24lv95deinzelobjekte_objektnummer"; 
     private static final String TABLE_DM01VCH24LV95NOMENKLATUR_FLURNAME = "dm01vch24lv95dnomenklatur_flurname";
     private static final String TABLE_PLZOCH1LV95DPLZORTSCHAFT_PLZ6 = "plzoch1lv95dplzortschaft_plz6";
+    private static final String TABLE_PLZOCH1LV95DPLZORTSCHAFT_ORTSCHAFT = "plzoch1lv95dplzortschaft_ortschaft";
+    private static final String TABLE_PLZOCH1LV95DPLZORTSCHAFT_ORTSCHAFTSNAME = "plzoch1lv95dplzortschaft_ortschaftsname";
     private static final String TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_GEBAEUDEEINGANG = "dm01vch24lv95dgebaeudeadressen_gebaeudeeingang";
     private static final String TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_LOKALISATIONSNAME = "dm01vch24lv95dgebaeudeadressen_lokalisationsname"; 
     private static final String TABLE_SO_G_V_0180822GRUNDBUCHKREISE_GRUNDBUCHKREIS = "so_g_v_0180822grundbuchkreise_grundbuchkreis";
@@ -246,17 +249,25 @@ public class WebServiceEndpoint {
 //        parameters.addValue("geom", wkbGeometry);
         
         // DICTINCT ON ist eigentlich unnötig, da fachlich nur eine 1:1-Beziehung erlaubt ist.
-        String stmt = "SELECT DISTINCT ON (bb.t_id) bb.t_id, ST_AsBinary(bb.geometrie) as geometrie, gwr_egid, 'realisiert' AS status \n" + 
+        String stmt = "SELECT DISTINCT ON (bb.t_id) bb.t_id, ST_AsBinary(bb.geometrie) as geometrie, gwr_egid, 'realisiert' AS status, bb.art \n" + 
                 "FROM \n" +
                 "     "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_BOFLAECHE+" AS bb \n" + 
                 "     LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_GEBAEUDENUMMER+" AS bbnr ON bbnr.gebaeudenummer_von = bb.t_id\n" + 
                 "WHERE art = 'Gebaeude' AND ST_DWithin(ST_GeomFromWKB(?,2056), bb.geometrie, 0.1) \n" +
                 "UNION ALL \n" +
-                "SELECT DISTINCT ON (bb.t_id) bb.t_id, ST_AsBinary(bb.geometrie) as geometrie, gwr_egid, 'projektiert' AS status \n" + 
+                "SELECT DISTINCT ON (bb.t_id) bb.t_id, ST_AsBinary(bb.geometrie) as geometrie, gwr_egid, 'projektiert' AS status, bb.art \n" + 
                 "FROM \n" +
                 "     "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_PROJBOFLAECHE+" AS bb \n" + 
                 "     LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DBODENBEDECKUNG_PROJGEBAEUDENUMMER+" AS bbnr ON bbnr.projgebaeudenummer_von = bb.t_id\n" + 
-                "WHERE art = 'Gebaeude' AND ST_DWithin(ST_GeomFromWKB(?,2056), bb.geometrie, 0.1)";
+                "WHERE art = 'Gebaeude' AND ST_DWithin(ST_GeomFromWKB(?,2056), bb.geometrie, 0.1) \n" + 
+                "UNION ALL \n" +
+                "SELECT DISTINCT ON (fl.t_id) fl.t_id, ST_AsBinary(fl.geometrie) AS geometrie, eonr.gwr_egid, 'realisiert' AS status, eo.art \n" + 
+                "FROM \n" + 
+                "    (SELECT * FROM "+getSchema()+"."+TABLE_DM01VCH24LV95DEINZELOBJEKTE_EINZELOBJEKT+" WHERE art = 'unterirdisches_Gebaeude') AS eo \n" + 
+                "    JOIN (SELECT * FROM "+getSchema()+"."+TABLE_DM01VCH24LV95DEINZELOBJEKTE_FLAECHENELEMENT+" WHERE ST_DWithin(ST_GeomFromWKB(?,2056), geometrie, 0.1)) AS fl \n" + 
+                "    ON fl.flaechenelement_von = eo.t_id \n" + 
+                "    LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DEINZELOBJEKTE_OBJEKTNUMMER+" AS eonr\n" + 
+                "    ON eonr.objektnummer_von = eo.t_id";
                
         List<Gebaeude> gebaeudeList = jdbcTemplate.query(stmt, new RowMapper<Gebaeude>() {
             WKBReader decoder=new WKBReader(geomFactory);
@@ -272,14 +283,20 @@ public class WebServiceEndpoint {
                     throw new IllegalStateException(e);
                 }
                 String bb_egid = rs.getString("gwr_egid");
+                String status = rs.getString("status");
+                String art = rs.getString("art");
                 
                 Gebaeude gebaeude = gbbasistypenFactory.createGebaeude();
-                if (rs.getString("status").equalsIgnoreCase("realisiert")) {
+                if (status.equalsIgnoreCase("realisiert")) {
                     gebaeude.setIstProjektiert(false);
                 } else {
                     gebaeude.setIstProjektiert(true);
                 }
-                gebaeude.setIstUnterirdisch(false);
+                if (art.equalsIgnoreCase("Gebaeude")) {
+                    gebaeude.setIstUnterirdisch(false);
+                } else {
+                    gebaeude.setIstUnterirdisch(true);
+                }
                 if (bb_egid != null) gebaeude.setGWREGID(Integer.valueOf(bb_egid));
                 
                 Geometry intersection = null;
@@ -305,12 +322,7 @@ public class WebServiceEndpoint {
                 } else {
                     gebaeude.setFlaechenmassAnteil(new BigDecimal(Math.round(10000*intersectionArea)).movePointLeft(4));
                 }
-                
-                
-                // TODO: handling von projektiert/realisert!!
-                
-                
-                
+ 
                 byte gebaeudeWkbGeometry[] = geomEncoder.write(gebaeudeGeometry);
 
                 String stmt = "SELECT ge.t_id, lokname.atext AS strassenname, ge.hausnummer, plz.plz, ortname.atext AS ortschaft, ge.astatus, ge.lage, ge.gwr_egid AS geb_egid, ge.gwr_edid \n" +
@@ -318,15 +330,30 @@ public class WebServiceEndpoint {
                         "    "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_GEBAEUDEEINGANG+" AS ge \n" + 
                         "    LEFT JOIN "+getSchema()+"."+TABLE_DM01VCH24LV95DGEBAEUDEADRESSEN_LOKALISATIONSNAME+" AS lokname \n" + 
                         "    ON ge.gebaeudeeingang_von = lokname.benannte \n" + 
-                        "    LEFT JOIN "+getSchema()+".plzoch1lv95dplzortschaft_ortschaft AS ort \n" + 
+                        "    LEFT JOIN "+getSchema()+"."+TABLE_PLZOCH1LV95DPLZORTSCHAFT_ORTSCHAFT+" AS ort \n" + 
                         "    ON ST_Intersects(ge.lage, ort.flaeche) \n" + 
-                        "    LEFT JOIN "+getSchema()+".plzoch1lv95dplzortschaft_ortschaftsname AS ortname \n" + 
+                        "    LEFT JOIN "+getSchema()+"."+TABLE_PLZOCH1LV95DPLZORTSCHAFT_ORTSCHAFTSNAME+" AS ortname \n" + 
                         "    ON ortname.ortschaftsname_von = ort.t_id \n" +
                         "    LEFT JOIN "+getSchema()+"."+TABLE_PLZOCH1LV95DPLZORTSCHAFT_PLZ6+" AS plz \n" + 
                         "    ON ST_Intersects(ge.lage, plz.flaeche ) \n" + 
-                        "WHERE ge.istoffiziellebezeichnung = 'ja' AND ge.astatus = 'real' AND ge.im_gebaeude = 'BB' AND ST_Intersects(ge.lage, ST_GeomFromWKB(?,2056))";
+                        "WHERE ge.istoffiziellebezeichnung = 'ja' AND ge.astatus = :status AND ge.im_gebaeude = :im_gebaeude AND ST_Intersects(ge.lage, ST_GeomFromWKB(:gebaeudeGeom,2056))";
                 
-                List<GebaeudeeingangAdresse> adressenList = jdbcTemplate.query(stmt, new RowMapper<GebaeudeeingangAdresse>() {
+                MapSqlParameterSource parameters = new MapSqlParameterSource();
+                parameters.addValue("gebaeudeGeom", gebaeudeWkbGeometry);
+                
+                if (status.equalsIgnoreCase("realisiert")) {
+                    parameters.addValue("status", "real");
+                } else {
+                    parameters.addValue("status", "projektiert");
+                }
+                
+                if (art.equalsIgnoreCase("Gebaeude")) {
+                    parameters.addValue("im_gebaeude", "BB");
+                } else {
+                    parameters.addValue("im_gebaeude", "EO");
+                }
+                
+                List<GebaeudeeingangAdresse> adressenList = jdbcParamTemplate.query(stmt, parameters, new RowMapper<GebaeudeeingangAdresse>() {
                     @Override
                     public GebaeudeeingangAdresse mapRow(ResultSet rs, int rowNum) throws SQLException {
                         String strassenname = rs.getString("strassenname");
@@ -348,11 +375,11 @@ public class WebServiceEndpoint {
                         
                         return gebaeudeeingangAdresse;
                     }
-                }, gebaeudeWkbGeometry);
+                });
                 gebaeude.getGebaeudeeingangAdresses().addAll(adressenList);
                 return gebaeude;
             }            
-        }, parcelWkbGeometry, parcelWkbGeometry);
+        }, parcelWkbGeometry, parcelWkbGeometry, parcelWkbGeometry);
         grundstueckType.getGebaeudes().addAll(gebaeudeList);
     }
     

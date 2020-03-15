@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:eCH-0007="http://www.ech.ch/xmlns/eCH-0007/6"
+  xmlns:eCH-0010="http://www.ech.ch/xmlns/eCH-0010/6"
+  xmlns:GbId="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1"
+  xmlns:GBBasisTypen="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1"
+  xmlns="http://schemas.geo.so.ch/AGI/GBDBSext/1.0" 
+  targetNamespace="http://schemas.geo.so.ch/AGI/GBDBSext/1.0" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="2.1.3"
+  >
+  <xsd:import namespace="http://www.ech.ch/xmlns/eCH-0010/6" schemaLocation="../../eCH-0010/6/eCH-0010-6-0.xsd"/>
+
+  <xsd:element name="NachfuehrungsgeometerAdresse" type="eCH-0010:organisationMailAddressType"/>
+  <xsd:element name="KatasteraamtAdresse" type="eCH-0010:organisationMailAddressType"/>
+  <xsd:element name="GrundbuchamtAdresse" type="eCH-0010:organisationMailAddressType"/>
+
+</xsd:schema>

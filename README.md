@@ -26,7 +26,7 @@ curl <<-EOF -fsSL -H "content-type: text/xml" -d @- http://localhost:8080/ws > r
       <ns:transactionId>RAUM-14922-1</ns:transactionId>
       <ns:BezugInhalt>IndexMitEigentum</ns:BezugInhalt>
       <ns:includeHistory>true</ns:includeHistory>
-      <ns:Id>CH729921320631::::</ns:Id>
+      <ns:Id>CH670679613281::::</ns:Id>
     </ns:GetParcelsByIdRequest>
   </soapenv:Body>
 </soapenv:Envelope>
@@ -59,4 +59,8 @@ EOF
 ## TODO:
 - Fix schemaLocation in `http://localhost:8080/ws/gbdbs.wsdl`. Notfalls auf dem Filesystem rumschieben bis es passt.
 - Exception handling: Stimmt die eingeschlagene Richtung?
+- Das mit den Extensions verstehe ich noch nicht.
+  * Wie wäre der richtige Approach?
+  * Wie bringt man das in Gradle unter einen Hut?
+  * Jetzt ist es in das GBDBS.xsd reingewürgt. Finde ich nicht gut. Aber sonst schaffe ich es nicht, dass der Gradle-Task (ant.xjc) das zusätzliche XSD kompiliert.
 

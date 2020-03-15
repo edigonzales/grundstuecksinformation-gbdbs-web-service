@@ -21,12 +21,13 @@ repositories {
 
 task genJaxb {
     ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
+    ext.extSourcesDir = "${buildDir}/generated-sources/jaxb-ext"
     ext.classesDir = "${buildDir}/classes/jaxb"
     ext.schema = "src/main/resources/xsd/GBDBS/2.1/gbdbs.wsdl"
 
     outputs.dir classesDir
 
-    doLast() {
+    doLast() {    
         project.ant {
             taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
                     classpath: configurations.jaxb.asPath
@@ -52,7 +53,7 @@ task genJaxb {
                     exclude(name: "**/*.java")
                 }
             }
-        }
+        }        
     }
 }
 

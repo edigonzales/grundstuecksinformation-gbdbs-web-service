@@ -9,6 +9,7 @@
   >
   <xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisId/2.1" schemaLocation="../../GBBasisId/2.1/GBBasisId.xsd"/>
   <xsd:import namespace="http://schemas.geo.admin.ch/BJ/TGBV/GBBasisTypen/2.1" schemaLocation="../../GBBasisTypen/2.1/GBBasisTypen.xsd"/>
+  <xsd:import namespace="http://schemas.geo.so.ch/AGI/GBDBSext/1.0" schemaLocation="../../GBDBSext/1.0/GBDBSext.xsd"/>
 
   <xsd:element name="extensions">
     <xsd:annotation>

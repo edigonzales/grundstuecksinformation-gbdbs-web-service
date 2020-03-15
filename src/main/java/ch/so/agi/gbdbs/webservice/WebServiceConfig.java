@@ -36,7 +36,8 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public Jaxb2Marshaller createMarshaller() {
         Jaxb2Marshaller marshaller=new Jaxb2Marshaller();
-        marshaller.setClassesToBeBound(ch.admin.geo.schemas.bj.tgbv.gbdbs._2.Exception.class,ch.ech.xmlns.ech_0010._6.OrganisationMailAdress.class);
+        //marshaller.setClassesToBeBound(ch.admin.geo.schemas.bj.tgbv.gbdbs._2.Exception.class,ch.ech.xmlns.ech_0010._6.OrganisationMailAdress.class);
+        marshaller.setClassesToBeBound(ch.admin.geo.schemas.bj.tgbv.gbdbs._2.Exception.class);
         marshaller.setSupportJaxbElementClass(true);
         marshaller.setLazyInit(true);
         return marshaller;
