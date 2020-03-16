@@ -44,7 +44,7 @@ curl <<-EOF -fsSL -H "content-type: text/xml" -d @- https://terravis-t.so.ch/gbd
     <ns:GetParcelsByIdRequest>
       <ns:version>2.1</ns:version>
       <ns:transactionId>RAUM-14922-1</ns:transactionId>
-      <ns:BezugInhalt>Index</ns:BezugInhalt>
+      <ns:BezugInhalt>IndexMitEigentum</ns:BezugInhalt>
       <ns:includeHistory>true</ns:includeHistory>
       <ns:Id>CH240632707339::::</ns:Id>
     </ns:GetParcelsByIdRequest>
