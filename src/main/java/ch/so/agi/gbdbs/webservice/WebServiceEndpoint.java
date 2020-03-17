@@ -34,7 +34,7 @@ import ch.admin.geo.schemas.bj.tgbv.gbdbs._2.GetParcelsByIdResponse.Grundstueck;
 import ch.ech.xmlns.ech_0007._6.CantonAbbreviationType;
 import ch.ech.xmlns.ech_0007._6.Gemeinde;
 import ch.ech.xmlns.ech_0010._6.OrganisationMailAddressInfoType;
-//import ch.ech.xmlns.ech_0010._6.OrganisationMailAdress;
+import ch.ech.xmlns.ech_0010._6.OrganisationMailAddressType;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -104,7 +104,9 @@ public class WebServiceEndpoint {
     private double minIntersection;
     
     ch.admin.geo.schemas.bj.tgbv.gbdbs._2.ObjectFactory gbdbsFactory = new ch.admin.geo.schemas.bj.tgbv.gbdbs._2.ObjectFactory();
+    ch.so.geo.schemas.agi.gbdbsext._1.ObjectFactory gbdbsExtFactory = new ch.so.geo.schemas.agi.gbdbsext._1.ObjectFactory();
     ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.ObjectFactory gbbasistypenFactory = new ch.admin.geo.schemas.bj.tgbv.gbbasistypen._2.ObjectFactory();
+    ch.ech.xmlns.ech_0010._6.ObjectFactory ech0006Factory = new ch.ech.xmlns.ech_0010._6.ObjectFactory(); 
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetParcelsByIdRequest")
     @ResponsePayload
@@ -183,6 +185,8 @@ public class WebServiceEndpoint {
             
             setGebaeude(grundstueckType, parcel.getGeometrie());
             
+            setNfGeometerAddress(grundstueckType);
+            
             // In eigenes extensions.xsd auslagern. (?)
             /*
             OrganisationMailAdress nfgeometerAddress = new OrganisationMailAdress();
@@ -228,8 +232,39 @@ public class WebServiceEndpoint {
     }
     
     // TODO
-    private void setNfGeometerAddress() {
+    private void setNfGeometerAddress(GrundstueckType grundstueckType) {            
+        OrganisationMailAddressInfoType nfgeometerAddressInfoType = ech0006Factory.createOrganisationMailAddressInfoType();
+        nfgeometerAddressInfoType.setOrganisationName("Firmenname");
+
+        OrganisationMailAddressType nfgeometerAddressType = ech0006Factory.createOrganisationMailAddressType();
+        nfgeometerAddressType.setOrganisation(nfgeometerAddressInfoType);
         
+        JAXBElement<OrganisationMailAddressType> nfgeometerAdresseElement = gbdbsExtFactory.createNachfuehrungsgeometerAdresse(nfgeometerAddressType);
+        
+        DOMResult res = new DOMResult();
+        marshaller.marshal(nfgeometerAdresseElement, res);
+        Document doc = (Document) res.getNode();
+        
+        Extensions extensions = new Extensions();
+        extensions.getAnies().add(doc.getDocumentElement());
+        grundstueckType.setExtensions(extensions);
+
+
+        /*
+        OrganisationMailAdress nfgeometerAddress = new OrganisationMailAdress();
+        OrganisationMailAddressInfoType nfgeometerAddressInfoType = new OrganisationMailAddressInfoType();
+        nfgeometerAddressInfoType.setOrganisationName("Firmenname");
+        nfgeometerAddress.setOrganisation(nfgeometerAddressInfoType);
+        
+        DOMResult res = new DOMResult();
+        marshaller.marshal(nfgeometerAddress, res);
+        Document doc = (Document) res.getNode();
+        
+        Extensions extensions = new Extensions();
+        extensions.getAnies().add(doc.getDocumentElement());
+        grundstueckType.setExtensions(extensions);
+        */
+
     }
     
     // TODO
