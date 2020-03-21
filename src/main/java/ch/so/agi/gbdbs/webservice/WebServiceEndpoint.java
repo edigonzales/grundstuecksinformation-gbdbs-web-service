@@ -558,7 +558,7 @@ public class WebServiceEndpoint {
         SimpleGrundstueck gs = gslist.get(0);
         gs.setGeometrie(multiPolygon);
 
-        // Grundbuchkreis
+        // Grundbuchkreis 
         try {
             Map<String,Object> gbKreis = jdbcTemplate.queryForMap(
                     "SELECT gb.aname,gb.grundbuchkreis_bfsnr,gb.bfsnr,gem.aname AS gemeindename FROM "+getSchema()+"."+TABLE_SO_G_V_0180822GRUNDBUCHKREISE_GRUNDBUCHKREIS+" AS gb" +
